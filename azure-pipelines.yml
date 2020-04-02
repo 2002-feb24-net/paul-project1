@@ -30,7 +30,7 @@ steps:
     ls
   displayName: Show directory contents
 
-- script: dotnet build
+- script: dotnet build *sln
     workingDirectory:'./PaulsUsedGoods.WebApp'
   displayName: dotnet build
 
