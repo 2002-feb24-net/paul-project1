@@ -1,0 +1,9 @@
+4/1/20
+Initial project creation
+Initial migration (code first)
+Initial structure (DataAccess, Domain, Test, WebApp)
+Initial Domain models
+Initial DataAccess models
+Initial Interfaces (Inside Domain)
+Added Logic Folder to Domain
+    Added BadWordChecker, CaseConverter
