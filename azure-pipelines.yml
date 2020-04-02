@@ -17,10 +17,10 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-#the steps in the job
+# the steps in the job
 # scripts is one kind of step - on linux itll run in bash
 # on windows itll run in command prompt
-#give all steps a good display name
+# give all steps a good display name
 steps:
 - script: echo Hello, world!
   displayName: Print Hello World
@@ -29,6 +29,10 @@ steps:
     echo "Showing current directory contents"
     ls
   displayName: Show directory contents
+
+- script: dotnet build
+    workingDirectory:'PaulsUsedGoods.WebApp'
+  displayName: dotnet build
 
 
 
