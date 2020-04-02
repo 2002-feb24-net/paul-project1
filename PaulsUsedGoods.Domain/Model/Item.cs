@@ -5,7 +5,7 @@ using PaulsUsedGoods.Domain.Logic;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    class Item
+    public class Item
     {
         private string _name;
         private string _description;
@@ -15,7 +15,7 @@ namespace PaulsUsedGoods.Domain.Model
         public int Id {get; set;}
         public Store Store {get; set;}
 
-        public string Topic 
+        public string Topic
         {
             get => _topic;
             set
@@ -31,7 +31,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string Name
         {
             get => _name;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {

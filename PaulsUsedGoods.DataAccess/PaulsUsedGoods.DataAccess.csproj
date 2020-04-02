@@ -12,4 +12,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaulsUsedGoods.Domain\PaulsUsedGoods.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

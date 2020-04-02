@@ -8,11 +8,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaulsUsedGoods.WebApp", "Pa
 		{F29DACEC-DBBF-4305-98AC-57A1F5FB9192} = {F29DACEC-DBBF-4305-98AC-57A1F5FB9192}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaulsUsedGoods.Domain", "..\PaulsUsedGoods.Domain\PaulsUsedGoods.Domain.csproj", "{29F700E8-9A1C-469C-B39C-29F66366FE15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaulsUsedGoods.Domain", "..\PaulsUsedGoods.Domain\PaulsUsedGoods.Domain.csproj", "{29F700E8-9A1C-469C-B39C-29F66366FE15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaulsUsedGoods.Test", "..\PaulsUsedGoods.Test\PaulsUsedGoods.Test.csproj", "{EDE2B9AB-EB21-4D95-8ABB-700DEA0DAB64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaulsUsedGoods.Test", "..\PaulsUsedGoods.Test\PaulsUsedGoods.Test.csproj", "{EDE2B9AB-EB21-4D95-8ABB-700DEA0DAB64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaulsUsedGoods.DataAccess", "..\PaulsUsedGoods.DataAccess\PaulsUsedGoods.DataAccess.csproj", "{F29DACEC-DBBF-4305-98AC-57A1F5FB9192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaulsUsedGoods.DataAccess", "..\PaulsUsedGoods.DataAccess\PaulsUsedGoods.DataAccess.csproj", "{F29DACEC-DBBF-4305-98AC-57A1F5FB9192}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29F700E8-9A1C-469C-B39C-29F66366FE15} = {29F700E8-9A1C-469C-B39C-29F66366FE15}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
