@@ -5,7 +5,7 @@ using PaulsUsedGoods.Domain.Logic;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    struct TopicOption
+    public struct TopicOption
     {
         private string _topic;
 
@@ -14,7 +14,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string Topic
         {
             get => _topic;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {
