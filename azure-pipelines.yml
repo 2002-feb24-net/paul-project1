@@ -34,6 +34,13 @@ steps:
   workingDirectory: ./PaulsUsedGoods.WebApp
   displayName: dotnet build
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: './PaulsUsedGoods.Test/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'MyProject1Test'
+
 
 
 
