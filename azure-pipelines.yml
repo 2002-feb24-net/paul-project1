@@ -31,7 +31,7 @@ steps:
   displayName: Show directory contents
 
 - script: dotnet build *sln
-   workingDirectory:'./PaulsUsedGoods.WebApp'
+    workingDirectory:./PaulsUsedGoods.WebApp
   displayName: dotnet build
 
 
