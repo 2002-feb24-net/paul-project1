@@ -42,7 +42,7 @@ namespace PaulsUsedGoods.Domain.Model
                 _items = value;
             }
         }
-
+//
         public List<TopicOption> Topics
         {
             get => _topics;
