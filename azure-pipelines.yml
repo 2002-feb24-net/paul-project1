@@ -1,87 +1,81 @@
-# Azure Pipelines YAML documentation
-# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema
 
-
-# this file defines a set of jobs that will run when triggered on a cloned version of your repo
-# a job is a set of steps
-# by default, there is just one job, and you give it a list of steps
-
-# by default, all branches get built
-# but adding a trigger configuration like this says "only build master branch"
 trigger:
 - master
 
-# a pool is a set of machines for running this job
-# this configuration says: "use Microsoft's hosted Ubuntu Linux virtual machines"
-# (we could if we wanted, have it connect to a machine WE control to run the job on)
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+- stage: build
 
-# the steps in the job
-# scripts is one kind of step - on linux itll run in bash
-# on windows itll run in command prompt
-# give all steps a good display name
-steps:
-- script: echo Hello, world!
-  displayName: Print Hello World
+  jobs:
+  - job: build
 
-- script: |
-    echo "Showing current directory contents"
-    ls
-  displayName: Show directory contents
+    pool:
+      vmImage: 'ubuntu-latest'
 
-- script: dotnet build *.sln
-  workingDirectory: ./PaulsUsedGoods.WebApp
-  displayName: dotnet build
+    steps:
 
-# we can publish test results to azure pipelines
-# have the build agent (the machine running the steps) notify azure pipelines of that useful info to keep alongside the logs
+    - script: echo Hello, world!
+      displayName: Print Hello World
 
-# other than scripts, there are also "task" steps
-# a task step implements common build operations that would be clumsy to write out in a script step
+    - script: |
+        echo "Showing current directory contents"
+        ls
+      displayName: Show directory contents
 
-- script: dotnet test --logger trx
-  continueOnError: true
-  displayName: dotnet test
+    - script: dotnet build *.sln
+      workingDirectory: ./PaulsUsedGoods.WebApp
+      displayName: dotnet build
 
-# the default condition for every step is "succeeded" - run this step if the previous step suceeded
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: '**/*.trx'
+    - script: dotnet test --logger trx
+      continueOnError: true
+      displayName: dotnet test
 
-# azure app service deploy
-# connect type - default
-# subscription - all point to same one
-# authorize (one time step for project)
-# app service type - windows
-# app service name - auto populates
-# thats all thats strictly needed
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
+      displayName: Publish Test results to build
 
-# this next task makes the zip that web deploy task is using
-# search repo for and ASP.NET project, run dotnet publish, and zips results
-# .NET Core service
-# command: publish
-# and zip it
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+    #zipafterpublish being true is default
+        zipAfterPublish: true
+      displayName: dotnet publish to zip
 
-# this looks for a zip file and deploys to azure app service
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription (Pay As You Go (Hopefully)(0898d619-ccf0-4843-99d4-f17ed331e0f4)'
-    appType: 'webApp'
-    WebAppName: 'PaulsUsedGoodsWebApp'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    - publish: 
+      artifact: WebApp
 
+    # this looks for a zip file and deploys to azure app service
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure subscription (Pay As You Go (Hopefully)(0898d619-ccf0-4843-99d4-f17ed331e0f4)'
+        appType: 'webApp'
+        WebAppName: 'PaulsUsedGoodsWebApp'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+      displayName: Deploy to Azure App service
 
+  - job: test
 
+    pool:
+      vmImage: 'windows-latest'
 
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+    steps:
+    
+    - script: dotnet test --collect:"XPlat Code Coverage" --logger trx
+      displayName: dotnet test
+
+    - task: DotNetCoreCLI@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
+      displayName: Publish test results to build
+      
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage'
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '**/coverlet/reports/Cobertura.xml' 
