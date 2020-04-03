@@ -29,9 +29,9 @@ stages:
         projectKey: 2002-feb24-net_paul-project1
         projectName: paule-project1
         extraProperties: 
-          sonar.exclusions=**/lib/**
-          sonar.exclusions=**/bin/**
-          sonar.exclusions=**/obj/**
+          sonar.exclusions= **/lib/**
+          sonar.exclusions= **/bin/**
+          sonar.exclusions= **/obj/**
       displayName: sonarcloud analysis prepare
 
     - script: dotnet build *.sln
