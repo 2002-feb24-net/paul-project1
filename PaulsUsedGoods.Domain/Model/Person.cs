@@ -5,7 +5,7 @@ using PaulsUsedGoods.Domain.Logic;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    class Person
+    public class Person
     {
         private string _firstname;
         private string _lastname;
@@ -18,7 +18,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string FirstName
         {
             get => _firstname;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {
@@ -36,7 +36,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string LastName
         {
             get => _lastname;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {
@@ -54,7 +54,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string Username
         {
             get => _username;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {
@@ -71,7 +71,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string Password
         {
             get => _password;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {

@@ -1,18 +1,21 @@
 ﻿using System;
 using PaulsUsedGoods.Domain.Logic;
+using System.Collections.Generic;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    class Seller
+    public class Seller
     {
         private string _name;
 
         public int Id {get; set;}
+        public List<Item> Items {get; set;}
+        public List<Review> Reviews {get; set;}
 
         public string Name
         {
             get => _name;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {

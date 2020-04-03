@@ -1,3 +1,17 @@
+4/2/20
+Moved solution 'Project1.sln' out of PaulsUsedGoods.WebApp, because it didnt belong in there, and it was causing build errors.
+Initial Mapper
+    Almost certainly has bugs, and causes an endless loop.
+        will fix later by overloading and sending in the adding item
+some tweaks in interfaces (for consistency)
+some tweaks in models (for consistency and data tracking)
+some tweaks in UsedGoodsDbContext
+some tweaks in Item context object
+    WILL NEED A NEW MIGRATION !!!!!
+Initial Repositories
+    almost certainly has bugs, no known ones though
+        ..still compiles..
+
 4/1/20
 Initial project creation
 Initial migration (code first)

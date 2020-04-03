@@ -9,9 +9,13 @@ namespace PaulsUsedGoods.Domain.Model
     {
         private string _name;
         private List<Item> _items;
-        private List<TopicOption> _topics;
 
         public int Id {get; set;}
+
+        public Store()
+        {
+            _items = new List<Item>{};
+        }
 
         public string Name
         {
@@ -41,24 +45,6 @@ namespace PaulsUsedGoods.Domain.Model
                 }
                 _items = value;
             }
-        }
-//
-        public List<TopicOption> Topics
-        {
-            get => _topics;
-            set
-            {
-                if(value.Count == 0)
-                {
-                    throw new ArgumentException("There is no input items!", nameof(value));
-                }
-                _topics = value;
-            }
-        }
-
-        public Store()
-        {
-            _items = new List<Item>{};
         }
     }
 }

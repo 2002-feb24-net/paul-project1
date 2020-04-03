@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace PaulsUsedGoods.Domain.Interfaces
 {
-    interface IReviewRepository
+    public interface IReviewRepository
     {
 // ! CLASS SPECIFIC
-        List<Review> GetPeopleByName(string personName = null);
-        Person GetPersonById(int personId);
-        void AddPerson(Person inputPerson);
-        void DeletePersonById(int personId);
-        void UpdatePerson(Item inputPerson);
-// ! RELATED TO ORDERS
-        List<Order> GetOrderByName(string personName = null);
-        Order GetOrderById(int orderId);
+        List<Review> GetReviewByUserName(string reviewName = null);
+        Review GetReviewById(int reviewId);
+        void AddReview(Review inputReview);
+        void DeleteReviewById(int reviewId);
+        void UpdateReview(Review inputReview);
+// // ! RELATED TO ORDERS
+//         List<Order> GetOrderByName(string personName = null);
+//         Order GetOrderById(int orderId);
 // ! GENERAL COMMANDS
         void Save();
     }

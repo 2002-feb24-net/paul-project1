@@ -1,12 +1,12 @@
 ﻿using PaulsUsedGoods.Domain.Model;
+using System.Collections.Generic;
 
 namespace PaulsUsedGoods.Domain.Interfaces
 {
-    interface ITopicOptionRepository
+    public interface ITopicOptionRepository
     {
 // ! CLASS SPECIFIC
-        TopicOption GetTopics();
-        TopicOption GetTopicByName(string topicName = null);
+        List<TopicOption> GetTopicByName(string topicName = null);
         TopicOption GetTopicById(int topicId);
         void AddTopic(TopicOption inputTopic);
         void DeleteTopicById(int topicId);

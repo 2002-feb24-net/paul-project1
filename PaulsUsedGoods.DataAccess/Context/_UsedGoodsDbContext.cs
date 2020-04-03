@@ -7,9 +7,16 @@ using Microsoft.EntityFrameworkCore;
 namespace PaulsUsedGoods.DataAccess.Context
 {
     public class UsedGoodsDbContext : DbContext
-    { 
-        public UsedGoodsDbContext(DbContextOptions options) : base(options)  
-        {  
+    {
+        public virtual DbSet<Item> Items {get; set;}
+        public virtual DbSet<Order> Orders {get; set;}
+        public virtual DbSet<Person> People { get; set; }
+        public virtual DbSet<Review> Reviews {get; set;}
+        public virtual DbSet<Seller> Sellers {get; set;}
+        public virtual DbSet<Store> Stores {get; set;}
+        public virtual DbSet<TopicOption> TopicOptions {get; set;}
+        public UsedGoodsDbContext(DbContextOptions options) : base(options)
+        {
 
         }
 
@@ -22,8 +29,8 @@ namespace PaulsUsedGoods.DataAccess.Context
                 }
             );
             modelBuilder.Entity<Person>().HasData(
-                new Person() 
-                {  
+                new Person()
+                {
                     PersonId = 1, StoreId = 1, FirstName = "ad", LastName = "min", Username = "admin", Password = "admin", Employee = true
                 }
             );
@@ -91,7 +98,7 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .HasForeignKey(e => e.OrderId);
             });
 
-            modelBuilder.Entity<Review>(entity => 
+            modelBuilder.Entity<Review>(entity =>
             {
                 entity.Property(e => e.ReviewId)
                     .IsRequired();
@@ -138,14 +145,5 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .HasForeignKey(e => e.TopicId);
             });
         }
-
-        DbSet<Item> Items {get; set;}
-        DbSet<Order> Orders {get; set;}
-        DbSet<Person> People { get; set; }
-        DbSet<Review> Reviews {get; set;}
-        DbSet<Seller> Sellers {get; set;}
-        DbSet<Store> Stores {get; set;}
-        DbSet<TopicOption> TopicOptions {get; set;}
-        
     }
 }

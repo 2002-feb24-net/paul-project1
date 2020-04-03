@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PaulsUsedGoods.Domain.Interfaces
 {
-    interface IItemRepository
+    public interface IItemRepository
     {
 // ! CLASS SPECIFIC
         List<Item> GetItemsByName(string itemName = null);

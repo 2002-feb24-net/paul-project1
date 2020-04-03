@@ -5,17 +5,19 @@ using PaulsUsedGoods.Domain.Logic;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    class Review
+    public class Review
     {
         private int _score;
         private string _comment;
 
         public int Id {get; set;}
+        public Person Person {get; set;}
+        public Seller Seller {get; set;}
 
         public int Score
         {
             get => _score;
-            set 
+            set
             {
                 if(value < 1 || value > 10)
                 {
@@ -28,7 +30,7 @@ namespace PaulsUsedGoods.Domain.Model
         public string Comment
         {
             get => _comment;
-            set 
+            set
             {
                 if(value.Length == 0)
                 {

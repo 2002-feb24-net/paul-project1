@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    class Order
+    public class Order
     {
         private DateTime _date;
         private double _price;
@@ -15,7 +15,7 @@ namespace PaulsUsedGoods.Domain.Model
         public DateTime Date
         {
             get => _date;
-            set 
+            set
             {
                 if(value.Year < 2020)
                 {
@@ -41,7 +41,7 @@ namespace PaulsUsedGoods.Domain.Model
         public double Price
         {
             get => _price;
-            set 
+            set
             {
                 if(value == 0)
                 {

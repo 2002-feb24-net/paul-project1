@@ -1,36 +1,81 @@
-﻿using PaulsUsedGoods.Domain.Model;
+﻿using System;
+using PaulsUsedGoods.Domain.Model;
 using System.Collections.Generic;
-using System.Text;
+using PaulsUsedGoods.DataAccess.Context;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using PaulsUsedGoods.Domain.Interfaces;
 
 namespace PaulsUsedGoods.DataAccess.Repositories
 {
-    class ItemRepository
+    public class ItemRepository : IItemRepository
     {
+        private readonly UsedGoodsDbContext _dbContext;
+        private readonly ILogger<ItemRepository> _logger;
+
+        public ItemRepository(UsedGoodsDbContext dbContext, ILogger<ItemRepository> logger)
+        {
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 // ! CLASS SPECIFIC
-        List<Item> GetItemsByName(string itemName = null)
+        public List<Domain.Model.Item> GetItemsByName(string itemName = null)
         {
-            return new List<Item>{};
+            _logger.LogInformation($"Retrieving items with the name: {itemName}");
+            List<Context.Item> itemList = _dbContext.Items
+                .Include(p => p.Store)
+                .Include(p => p.Seller)
+                .Include(p => p.TopicOption)
+                .ToList();
+            if (itemName != null)
+            {
+                itemList = itemList.FindAll(p => p.ItemName == itemName);
+            }
+            return itemList.Select(Mapper.MapItem).ToList();
         }
-        Item GetItemById(int itemId)
+        public Domain.Model.Item GetItemById(int itemId)
         {
-            return new Item();
+            _logger.LogInformation($"Retrieving item id: {itemId}");
+            Context.Item returnItem = _dbContext.Items
+                .Include(p => p.Store)
+                .Include(p => p.Seller)
+                .Include(p => p.TopicOption)
+                .First(p => p.ItemId == itemId);
+            return Mapper.MapItem(returnItem);
         }
-        void AddItem(Item inputItem)
+        public void AddItem(Domain.Model.Item inputItem)
         {
+            if (inputItem.Id != 0)
+            {
+                _logger.LogWarning($"Item to be added has an ID ({inputItem.Id}) already: ignoring.");
+            }
 
-        }
-        void DeleteItemById(int itemId)
-        {
+            _logger.LogInformation("Adding item");
 
+            Context.Item entity = Mapper.UnMapItem(inputItem);
+            entity.ItemId = _dbContext.Items.Max(p => p.ItemId)+1;
+            _dbContext.Add(entity);
         }
-        void UpdateItem(Item inputItem)
+        public void DeleteItemById(int itemId)
         {
+            _logger.LogInformation($"Deleting item with ID {itemId}");
+            Context.Item entity = _dbContext.Items.Find(itemId);
+            _dbContext.Remove(entity);
+        }
+        public void UpdateItem(Domain.Model.Item inputItem)
+        {
+            _logger.LogInformation($"Updating item with ID {inputItem.Id}");
+            Context.Item currentEntity = _dbContext.Items.Find(inputItem.Id);
+            Context.Item newEntity = Mapper.UnMapItem(inputItem);
 
+            _dbContext.Entry(currentEntity).CurrentValues.SetValues(newEntity);
         }
 // ! GENERAL COMMANDS
-        void Save()
+        public void Save()
         {
-
+            _logger.LogInformation("Saving changes to the database");
+            _dbContext.SaveChanges();
         }
     }
 }

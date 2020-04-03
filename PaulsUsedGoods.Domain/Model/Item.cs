@@ -10,23 +10,12 @@ namespace PaulsUsedGoods.Domain.Model
         private string _name;
         private string _description;
         private double _price;
-        private string _topic;
 
         public int Id {get; set;}
         public Store Store {get; set;}
-
-        public string Topic
-        {
-            get => _topic;
-            set
-            {
-                if(value.Length == 0)
-                {
-                    throw new ArgumentException("There is no input topic!", nameof(value));
-                }
-                _topic = value;
-            }
-        }
+        public Order Order {get; set;}
+        public Seller Seller {get; set;}
+        public TopicOption Topic { get; set; }
 
         public string Name
         {
