@@ -38,6 +38,13 @@ stages:
       workingDirectory: ./PaulsUsedGoods.WebApp
       displayName: dotnet build
 
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
+      displayName: Publish Test results to build
+
     - task: SonarCloudAnalyze@1
       displayName: sonarcloud analysis run
 
