@@ -72,12 +72,6 @@ stages:
           sonar.exclusions=**/obj/**
       displayName: sonarcloud analysis prepare
 
-    - task: UseDotNet@2
-      inputs:
-        packageType: sdk
-        version: $(sdkVersion)
-      displayName: dotnet $(sdkVersion)
-
     - script: dotnet build $(solutionPath)
         --configuration $(buildConfiguration)
       displayName: dotnet build
