@@ -44,17 +44,6 @@ stages:
     - task: SonarCloudPublish@1
       displayName: sonarcloud results publish
 
-    - script: dotnet test --logger trx
-      continueOnError: true
-      displayName: dotnet test
-
-    - task: PublishTestResults@2
-      condition: succeededOrFailed()
-      inputs:
-        testRunner: VSTest
-        testResultsFiles: '**/*.trx'
-      displayName: Publish Test results to build
-
     - task: DotNetCoreCLI@2
       inputs:
         command: 'publish'
@@ -85,6 +74,13 @@ stages:
     
     - script: dotnet test --collect:"XPlat Code Coverage" --logger trx
       displayName: dotnet test
+
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
+      displayName: Publish Test results to build
 
     - task: DotNetCoreCLI@2
       condition: succeededOrFailed()
