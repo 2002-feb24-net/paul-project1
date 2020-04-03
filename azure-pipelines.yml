@@ -45,7 +45,7 @@ stages:
           --output $(Build.ArtifactStagingDirectory)/publish
         modifyOutputPath: false
         zipAfterPublish: false
-      displayName: dotnet publish to zip
+      displayName: dotnet publish
 
     - publish: $(Build.ArtifactStagingDirectory)/publish
       artifact: app
@@ -67,16 +67,22 @@ stages:
         projectKey: 2002-feb24-net_paul-project1
         projectName: paule-project1
         extraProperties: |
-          sonar.exclusions= **/lib/**
-          sonar.exclusions= **/bin/**
-          sonar.exclusions= **/obj/**
+          sonar.exclusions=**/lib/**
+          sonar.exclusions=**/bin/**
+          sonar.exclusions=**/obj/**
       displayName: sonarcloud analysis prepare
+
+    - task: UseDotNet@2
+      inputs:
+        packageType: sdk
+        version: $(sdkVersion)
+      displayName: dotnet $(sdkVersion)
 
     - script: dotnet build $(solutionPath)
         --configuration $(buildConfiguration)
       displayName: dotnet build
 
-    - script: dotnet test 
+    - script: dotnet test $(solutionPath)
         --configuration $(buildConfiguration)
         --collect "XPlat Code Coverage"
         --logger trx
@@ -96,10 +102,10 @@ stages:
 
     - task: PublishCodeCoverageResults@1
       condition: succeededOrFailed()
-      displayName: code coverage build publish
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: $(Common.TestResultsDirectory)/*/coverage.cobertura.xml' 
+      displayName: code coverage build publish
 
     - task: SonarCloudPublish@1
       condition: succeededOrFailed()
@@ -127,7 +133,7 @@ stages:
 
           - download: current
             artifact: app
-            displayName:  artifact download app
+            displayName: artifact download app
 
           - task: AzureRmWebAppDeployment@4
             inputs:
