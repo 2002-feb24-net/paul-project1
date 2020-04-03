@@ -21,9 +21,24 @@ stages:
         ls
       displayName: Show directory contents
 
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: SonarCloud-pedwards
+        organization: 2002-feb24-net
+        scannerMode: MSBuild
+        projectKey: 2002-feb24-net_paul-project1
+        projectName: paule-project1
+      displayName: sonarcloud analysis prepare
+
     - script: dotnet build *.sln
       workingDirectory: ./PaulsUsedGoods.WebApp
       displayName: dotnet build
+
+    - task: SonarCloudAnalyze@1
+      displayName: sonarcloud analysis run
+
+    - task: SonarCloudPublish@1
+      displayName: sonarcloud results publish
 
     - script: dotnet test --logger trx
       continueOnError: true
