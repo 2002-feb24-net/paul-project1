@@ -38,8 +38,18 @@ steps:
   continueOnError: true
   displayName: dotnet test
 
+# the default condition for every step is "succeeded" - run this step if the previous step suceeded
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
+# we can publish test results to azure pipelines
+# have the build agent (the machine running the steps) notify azure pipelines of that useful info to keep alongside the logs
 
+# other than scripts, there are also "task" steps
+# a task step implements common build operations that would be clumsy to write out in a script step
 
 
 
