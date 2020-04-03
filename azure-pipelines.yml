@@ -34,7 +34,7 @@ steps:
   workingDirectory: ./PaulsUsedGoods.WebApp
   displayName: dotnet build
 
-- script: dotnet test
+- script: dotnet test --logger trx
   continueOnError: true
   displayName: dotnet test
 
