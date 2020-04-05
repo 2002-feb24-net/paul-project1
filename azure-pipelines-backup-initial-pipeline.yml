@@ -1,0 +1,58 @@
+# Azure Pipelines YAML documentation
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema
+
+
+# this file defines a set of jobs that will run when triggered on a cloned version of your repo
+# a job is a set of steps
+# by default, there is just one job, and you give it a list of steps
+
+# by default, all branches get built
+# but adding a trigger configuration like this says "only build master branch"
+trigger:
+- master
+
+# a pool is a set of machines for running this job
+# this configuration says: "use Microsoft's hosted Ubuntu Linux virtual machines"
+# (we could if we wanted, have it connect to a machine WE control to run the job on)
+pool:
+  vmImage: 'ubuntu-latest'
+
+# the steps in the job
+# scripts is one kind of step - on linux itll run in bash
+# on windows itll run in command prompt
+# give all steps a good display name
+steps:
+- script: echo Hello, world!
+  displayName: Print Hello World
+
+- script: |
+    echo "Showing current directory contents"
+    ls
+  displayName: Show directory contents
+
+- script: dotnet build *.sln
+  workingDirectory: ./PaulsUsedGoods.WebApp
+  displayName: dotnet build
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: './PaulsUsedGoods.Test/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'MyProject1Test'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Azure subscription (Pay As You Go (Hopefully)(0898d619-ccf0-4843-99d4-f17ed331e0f4)'
+    appType: 'webApp'
+    appName: 'PaulsUsedGoodsWebApp'
+    package: '$(System.ArtifactsDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
+
+
+
+
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml

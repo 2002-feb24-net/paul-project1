@@ -5,7 +5,19 @@ namespace PaulsUsedGoods.Domain.Logic
         public static string Convert(string inputString)
         {
             inputString = inputString.ToLower();
-            inputString = inputString[0].ToString().ToUpper() + inputString.Substring(1,inputString.Length);
+            if (inputString.Length == 1)
+            {
+                inputString = inputString.ToUpper();
+            }
+            else
+            {
+                string[] inputArray = inputString.Split(" ");
+                for (int i = 0; i< inputArray.Length; i++)
+                {
+                    inputArray[i] = char.ToUpper(inputArray[i][0]) + inputArray[i].Substring(1);
+                }
+                inputString = string.Join(' ', inputArray);
+            }
             return inputString;
         }
     }

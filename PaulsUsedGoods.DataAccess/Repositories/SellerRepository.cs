@@ -9,7 +9,7 @@ using PaulsUsedGoods.Domain.Interfaces;
 
 namespace PaulsUsedGoods.DataAccess.Repositories
 {
-    class SellerRepository : ISellerRepository
+    public class SellerRepository : ISellerRepository
     {
         private readonly UsedGoodsDbContext _dbContext;
         private readonly ILogger<ItemRepository> _logger;
@@ -29,7 +29,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (sellerName != null)
             {
-                sellerList = sellerList.FindAll(p => p.SellerName == sellerName);
+                sellerList = sellerList.FindAll(p => p.SellerName.ToLower() == sellerName.ToLower());
             }
             return sellerList.Select(Mapper.MapSeller).ToList();
         }
@@ -52,7 +52,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding seller");
 
             Context.Seller entity = Mapper.UnMapSeller(inputSeller);
-            entity.SellerId = _dbContext.Sellers.Max(p => p.SellerId)+1;
+            entity.SellerId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteSellerById(int sellerId)

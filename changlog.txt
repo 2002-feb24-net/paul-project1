@@ -1,3 +1,29 @@
+4/5/20
+can now create,edit,delete: people,
+
+4/4/20
+Tweaked item view to now show all related info
+Can now create a new item, and assign it existing topic,seller,store  (default orderid = 0)
+changed mapper to remove recursion
+changed mapper to handle potential null orders
+Reworked code to eliminate several bugs, including the reference bug (undocumented)
+Can now create or edit items, and delete
+
+4/3/20
+Changed startup.cs to look closer to Nick's.
+    will probably end up changing it late, because not entirely sure what some of it does atm.
+Added serilog
+Changed program.cs to look like Nick's.
+    Most of what it did was add a logger.
+    Not sure why other changes though.
+Cleaned using statements in statup.cs and program.cs
+Added seed data
+    MUST MIGRATE!!!
+Made a new migration.
+Nothing works related to views and controllers..... x.x
+initial views and controllers (finally)
+added a (working) search function for Item, searches both description and name
+
 4/2/20
 Moved solution 'Project1.sln' out of PaulsUsedGoods.WebApp, because it didnt belong in there, and it was causing build errors.
 Initial Mapper

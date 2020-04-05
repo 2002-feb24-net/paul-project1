@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Project1.Models;
+using PaulsUsedGoods.WebApp.ViewModels;
 
 namespace Project1.Controllers
 {
@@ -23,9 +23,9 @@ namespace Project1.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy(int IdNumber)
         {
-            return View();
+            return View(IdNumber);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

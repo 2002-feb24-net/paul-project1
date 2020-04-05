@@ -9,7 +9,7 @@ using PaulsUsedGoods.Domain.Interfaces;
 
 namespace PaulsUsedGoods.DataAccess.Repositories
 {
-    class StoreRepository : IStoreRepository
+    public class StoreRepository : IStoreRepository
     {
 
         private readonly UsedGoodsDbContext _dbContext;
@@ -31,7 +31,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (storeName != null)
             {
-                storeList = storeList.FindAll(p => p.LocationName == storeName);
+                storeList = storeList.FindAll(p => p.LocationName.ToLower() == storeName.ToLower());
             }
             return storeList.Select(Mapper.MapStore).ToList();
         }
@@ -54,7 +54,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding store");
 
             Context.Store entity = Mapper.UnMapStore(inputStore);
-            entity.StoreId = _dbContext.Stores.Max(p => p.StoreId)+1;
+            entity.StoreId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteStoreById(int storeId)

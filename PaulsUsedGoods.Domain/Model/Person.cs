@@ -13,6 +13,7 @@ namespace PaulsUsedGoods.Domain.Model
         private string _password;
         private bool _employeetag;
 
+        public int StoreId {get; set;}
         public int Id {get; set;}
 
         public string FirstName

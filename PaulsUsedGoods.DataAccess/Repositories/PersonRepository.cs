@@ -28,7 +28,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (personName != null)
             {
-                personList = personList.FindAll(p => p.Username == personName);
+                personList = personList.FindAll(p => p.Username.ToLower() == personName.ToLower());
             }
             return personList.Select(Mapper.MapPerson).ToList();
         }
@@ -49,13 +49,13 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding person");
 
             Context.Person entity = Mapper.UnMapPerson(inputPerson);
-            entity.PersonId = _dbContext.People.Max(p => p.PersonId)+1;
+            entity.PersonId = 0;
             _dbContext.Add(entity);
         }
         public void DeletePersonById(int personId)
         {
-            _logger.LogInformation($"Deleting item with ID {personId}");
-            Context.Item entity = _dbContext.Items.Find(personId);
+            _logger.LogInformation($"Deleting person with ID {personId}");
+            Context.Person entity = _dbContext.People.Find(personId);
             _dbContext.Remove(entity);
         }
         public void UpdatePerson(Domain.Model.Person inputPerson)

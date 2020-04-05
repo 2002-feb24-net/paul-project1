@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace Project1.Models
+namespace PaulsUsedGoods.WebApp.ViewModels
 {
     public class ErrorViewModel
     {

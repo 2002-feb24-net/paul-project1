@@ -22,6 +22,12 @@ namespace PaulsUsedGoods.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<TopicOption>().HasData(
+                new TopicOption()
+                {
+                    TopicOptionId = 1, TopicName = "Candy"
+                }
+            );
             modelBuilder.Entity<Store>().HasData(
                 new Store()
                 {
@@ -34,6 +40,31 @@ namespace PaulsUsedGoods.DataAccess.Context
                     PersonId = 1, StoreId = 1, FirstName = "ad", LastName = "min", Username = "admin", Password = "admin", Employee = true
                 }
             );
+            modelBuilder.Entity<Order>().HasData(
+                new Order()
+                {
+                    OrderId = 1, PersonId = 1, OrderDate = DateTime.Now, TotalOrderPrice = 2.50
+                }
+            );
+            modelBuilder.Entity<Seller>().HasData(
+                new Seller()
+                {
+                    SellerId = 1, SellerName = "Fat Joe"
+                }
+            );
+            modelBuilder.Entity<Review>().HasData(
+                new Review()
+                {
+                    ReviewId = 1,PersonId = 1, SellerId = 1, Score = 6, Comment = "All candy is half eaten, so I am giving half of a "
+                }
+            );
+            modelBuilder.Entity<Item>().HasData(
+                new Item()
+                {
+                    ItemId = 1, StoreId = 1, OrderId = 1, SellerId = 1, TopicId = 1, ItemName = "Candy Bar", ItemDescription = "Half of a Kit-Kat bar", ItemPrice = 2.50
+                }
+            );
+
 
             modelBuilder.Entity<Seller>(entity =>
             {
@@ -41,7 +72,7 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .IsRequired();
                 entity.Property(e => e.SellerName)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(128);
             });
 
             modelBuilder.Entity<Store>(entity =>
@@ -50,7 +81,7 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .IsRequired();
                 entity.Property(e => e.LocationName)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(128);
             });
 
             modelBuilder.Entity<TopicOption>(entity =>
@@ -59,7 +90,7 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .IsRequired();
                 entity.Property(e => e.TopicName)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(128);
             });
 
             modelBuilder.Entity<Person>(entity =>

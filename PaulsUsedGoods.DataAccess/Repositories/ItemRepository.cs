@@ -24,13 +24,14 @@ namespace PaulsUsedGoods.DataAccess.Repositories
         {
             _logger.LogInformation($"Retrieving items with the name: {itemName}");
             List<Context.Item> itemList = _dbContext.Items
+                .Include(p => p.Order)
                 .Include(p => p.Store)
                 .Include(p => p.Seller)
                 .Include(p => p.TopicOption)
                 .ToList();
             if (itemName != null)
             {
-                itemList = itemList.FindAll(p => p.ItemName == itemName);
+                itemList = itemList.FindAll(p => p.ItemName.ToLower() == itemName.ToLower());
             }
             return itemList.Select(Mapper.MapItem).ToList();
         }
@@ -54,7 +55,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding item");
 
             Context.Item entity = Mapper.UnMapItem(inputItem);
-            entity.ItemId = _dbContext.Items.Max(p => p.ItemId)+1;
+            entity.ItemId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteItemById(int itemId)

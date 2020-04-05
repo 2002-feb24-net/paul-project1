@@ -29,7 +29,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (reviewUserName != null)
             {
-                reviewList = reviewList.FindAll(p => p.Person.Username == reviewUserName);
+                reviewList = reviewList.FindAll(p => p.Person.Username.ToLower() == reviewUserName.ToLower());
             }
             return reviewList.Select(Mapper.MapReview).ToList();
         }
@@ -65,12 +65,12 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding review");
 
             Context.Review entity = Mapper.UnMapReview(inputReview);
-            entity.ReviewId = _dbContext.Reviews.Max(p => p.ReviewId)+1;
+            entity.ReviewId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteReviewById(int reviewId)
         {
-            _logger.LogInformation($"Deleting item with ID {reviewId}");
+            _logger.LogInformation($"Deleting review with ID {reviewId}");
             Context.Review entity = _dbContext.Reviews.Find(reviewId);
             _dbContext.Remove(entity);
         }

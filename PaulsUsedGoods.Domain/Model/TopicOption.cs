@@ -10,6 +10,7 @@ namespace PaulsUsedGoods.Domain.Model
         private string _topic;
 
         public int Id {get; set;}
+
         public List<Item> Items {get; set;}
 
         public string Topic

@@ -12,10 +12,15 @@ namespace PaulsUsedGoods.Domain.Model
         private double _price;
 
         public int Id {get; set;}
-        public Store Store {get; set;}
-        public Order Order {get; set;}
-        public Seller Seller {get; set;}
-        public TopicOption Topic { get; set; }
+        public int StoreId {get; set;}
+        public int? OrderId {get; set;}
+        public int SellerId {get; set;}
+        public int TopicId { get; set; }
+
+        // public Store Store {get; set;}
+        // public Order Order {get; set;}
+        // public Seller Seller {get; set;}
+        // public TopicOption Topic { get; set; }
 
         public string Name
         {

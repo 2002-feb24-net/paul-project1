@@ -9,7 +9,7 @@ using PaulsUsedGoods.Domain.Interfaces;
 
 namespace PaulsUsedGoods.DataAccess.Repositories
 {
-    class TopicOptionRepository : ITopicOptionRepository
+    public class TopicOptionRepository : ITopicOptionRepository
     {
 
         private readonly UsedGoodsDbContext _dbContext;
@@ -30,7 +30,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (topicName != null)
             {
-                topicList = topicList.FindAll(p => p.TopicName == topicName);
+                topicList = topicList.FindAll(p => p.TopicName.ToLower() == topicName.ToLower());
             }
             return topicList.Select(Mapper.MapTopic).ToList();
         }
@@ -52,7 +52,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding topic");
 
             Context.TopicOption entity = Mapper.UnMapTopic(inputTopic);
-            entity.TopicOptionId = _dbContext.TopicOptions.Max(p => p.TopicOptionId)+1;
+            entity.TopicOptionId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteTopicById(int topicId)

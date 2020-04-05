@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using PaulsUsedGoods.DataAccess.Context;
+using PaulsUsedGoods.DataAccess.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace PaulsUsedGoods.DataAccess
 {
@@ -9,16 +11,25 @@ namespace PaulsUsedGoods.DataAccess
     {
         public static Domain.Model.Item MapItem(Context.Item item)
         {
+            Domain.Model.Order myOrder;
+            if (item.Order != null)
+            {
+                myOrder = MapOrder(item.Order);
+            }
+            else
+            {
+                myOrder = null;
+            }
             return new Domain.Model.Item
             {
                 Id = item.ItemId,
                 Name = item.ItemName,
                 Description = item.ItemDescription,
                 Price = item.ItemPrice,
-                Topic = MapTopic(item.TopicOption),
-                Store = MapStore(item.Store),
-                Order = MapOrder(item.Order),
-                Seller = MapSeller(item.Seller)
+                StoreId = item.StoreId,
+                OrderId = item.OrderId,
+                SellerId = item.SellerId,
+                TopicId  = item.TopicId
             };
         }
 
@@ -27,17 +38,13 @@ namespace PaulsUsedGoods.DataAccess
             return new Context.Item
             {
                 ItemId = item.Id,
-                StoreId = item.Store.Id,
-                OrderId = item.Order.Id,
-                SellerId = item.Seller.Id,
-                TopicId = item.Topic.Id,
+                StoreId = item.StoreId,
+                OrderId = item.OrderId,
+                SellerId = item.SellerId,
+                TopicId = item.TopicId,
                 ItemName = item.Name,
                 ItemDescription = item.Description,
                 ItemPrice = item.Price,
-                Store = UnMapStore(item.Store),
-                Order = UnMapOrder(item.Order),
-                Seller = UnMapSeller(item.Seller),
-                TopicOption = UnMapTopic(item.Topic)
             };
         }
 
@@ -57,7 +64,6 @@ namespace PaulsUsedGoods.DataAccess
             {
                 StoreId = store.Id,
                 LocationName = store.Name,
-                Item = store.Items.Select(UnMapItem).ToList()
             };
         }
 
@@ -67,29 +73,45 @@ namespace PaulsUsedGoods.DataAccess
             {
                 Id = topic.TopicOptionId,
                 Topic = topic.TopicName,
-                Items = topic.Item.Select(MapItem).ToList()
             };
         }
 
         public static Context.TopicOption UnMapTopic(Domain.Model.TopicOption topic)
         {
-            return new Context.TopicOption
+            List<Context.Item> myItems = new List<Context.Item>();
+            var myTopic = new Context.TopicOption
             {
                 TopicOptionId = topic.Id,
                 TopicName = topic.Topic,
-                Item = topic.Items.Select(UnMapItem).ToList()
+                Item = myItems
             };
+            foreach (var val in topic.Items)
+            {
+                myTopic.Item.Add(UnMapItem(val));
+            }
+            return myTopic;
         }
 
         public static Domain.Model.Order MapOrder(Context.Order order)
         {
-            return new Domain.Model.Order
+            if (order == null)
             {
-                Id = order.OrderId,
-                Date = order.OrderDate,
-                Price = order.TotalOrderPrice,
-                Items = order.Item.Select(MapItem).ToList()
-            };
+                return new Domain.Model.Order
+                {
+                    Id = 0,
+                    Date = DateTime.Now,
+                    Price = 0,
+                };
+            }
+            else
+            {
+                return new Domain.Model.Order
+                {
+                    Id = order.OrderId,
+                    Date = order.OrderDate,
+                    Price = order.TotalOrderPrice
+                };
+            }
         }
 
         public static Context.Order UnMapOrder(Domain.Model.Order order)
@@ -99,7 +121,6 @@ namespace PaulsUsedGoods.DataAccess
                 OrderId = order.Id,
                 OrderDate = order.Date,
                 TotalOrderPrice = order.Price,
-                Item = order.Items.Select(UnMapItem).ToList()
             };
         }
 
@@ -109,8 +130,6 @@ namespace PaulsUsedGoods.DataAccess
             {
                 Id = seller.SellerId,
                 Name = seller.SellerName,
-                Items = seller.Item.Select(MapItem).ToList(),
-                Reviews = seller.Review.Select(MapReview).ToList()
             };
         }
 
@@ -120,8 +139,6 @@ namespace PaulsUsedGoods.DataAccess
             {
                 SellerId = seller.Id,
                 SellerName = seller.Name,
-                Item = seller.Items.Select(UnMapItem).ToList(),
-                Review = seller.Reviews.Select(UnMapReview).ToList()
             };
         }
 
@@ -146,8 +163,6 @@ namespace PaulsUsedGoods.DataAccess
                 SellerId = review.Seller.Id,
                 Score = review.Score,
                 Comment = review.Comment,
-                Person = UnMapPerson(review.Person),
-                Seller = UnMapSeller(review.Seller)
             };
         }
 
@@ -159,7 +174,9 @@ namespace PaulsUsedGoods.DataAccess
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Username = person.Username,
-                EmployeeTag = person.Employee
+                EmployeeTag = person.Employee,
+                Password = person.Password,
+                StoreId = person.StoreId
             };
         }
 
@@ -171,7 +188,9 @@ namespace PaulsUsedGoods.DataAccess
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Username = person.Username,
-                Employee = person.EmployeeTag
+                Employee = person.EmployeeTag,
+                Password = person.Password,
+                StoreId = person.StoreId
             };
         }
 

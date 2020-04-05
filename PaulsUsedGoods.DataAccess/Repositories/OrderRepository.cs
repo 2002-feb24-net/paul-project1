@@ -30,17 +30,22 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .ToList();
             if (orderName != null)
             {
-                orderList = orderList.FindAll(p => p.Person.Username == orderName);
+                orderList = orderList.FindAll(p => p.Person.Username.ToLower() == orderName.ToLower());
             }
             return orderList.Select(Mapper.MapOrder).ToList();
         }
         public Domain.Model.Order GetOrderById(int orderId)
         {
             _logger.LogInformation($"Retrieving order id: {orderId}");
+            if (orderId == 0)
+            {
+                _logger.LogInformation($"Order id is 0, returning null for order.");
+                return null;
+            }
             Context.Order returnOrder = _dbContext.Orders
                 .Include(p => p.Person)
                 .Include(p => p.Item)
-                .First(p => p.OrderId == orderId);
+                .FirstOrDefault(p => p.OrderId == orderId);
             return Mapper.MapOrder(returnOrder);
         }
         public void AddOrder(Domain.Model.Order inputOrder)
@@ -53,7 +58,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation("Adding order");
 
             Context.Order entity = Mapper.UnMapOrder(inputOrder);
-            entity.OrderId = _dbContext.Orders.Max(p => p.OrderId)+1;
+            entity.OrderId = 0;
             _dbContext.Add(entity);
         }
         public void DeleteOrderById(int orderId)
