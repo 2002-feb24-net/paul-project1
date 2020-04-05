@@ -106,7 +106,7 @@ stages:
 
 - stage: deploy
   displayName: deploy
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/head/master'))
+  condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/head/master'))
   dependsOn: build
 
   jobs:
