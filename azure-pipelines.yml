@@ -12,7 +12,7 @@ pr:
 
 stages:
 
-- stage: build
+- stage: 'build'
   displayName: build
 
   variables:
@@ -105,8 +105,7 @@ stages:
       displayName: sonarcloud results publish
 
 - stage: deploy
-  displayName: deploy
-  condition: and(succeededOrFailed(), eq(variables['Build.SourceBranch'], 'refs/head/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   dependsOn: build
 
   jobs:
