@@ -34,6 +34,7 @@ namespace PaulsUsedGoods.WebApp.ViewModels
 
         [Display(Name = "Item Price")]
         [Required]
+        [DisplayFormat(DataFormatString = "{0:#.##}")]
         public double ItemPrice {get; set;}
     }
 }

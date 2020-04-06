@@ -1,5 +1,5 @@
 4/5/20
-can now create,edit,delete: people,
+can now create,edit,delete: people, reviews, sellers
 
 4/4/20
 Tweaked item view to now show all related info

@@ -11,15 +11,6 @@ namespace PaulsUsedGoods.DataAccess
     {
         public static Domain.Model.Item MapItem(Context.Item item)
         {
-            Domain.Model.Order myOrder;
-            if (item.Order != null)
-            {
-                myOrder = MapOrder(item.Order);
-            }
-            else
-            {
-                myOrder = null;
-            }
             return new Domain.Model.Item
             {
                 Id = item.ItemId,
@@ -130,6 +121,8 @@ namespace PaulsUsedGoods.DataAccess
             {
                 Id = seller.SellerId,
                 Name = seller.SellerName,
+                Items = seller.Item.Select(MapItem).ToList(),
+                Reviews = seller.Review.Select(MapReview).ToList()
             };
         }
 
@@ -149,8 +142,8 @@ namespace PaulsUsedGoods.DataAccess
                 Id = review.ReviewId,
                 Score = review.Score,
                 Comment = review.Comment,
-                Person = MapPerson(review.Person),
-                Seller = MapSeller(review.Seller)
+                PersonId = review.PersonId,
+                SellerId = review.SellerId
             };
         }
 
@@ -159,8 +152,8 @@ namespace PaulsUsedGoods.DataAccess
             return new Context.Review
             {
                 ReviewId = review.Id,
-                PersonId = review.Person.Id,
-                SellerId = review.Seller.Id,
+                PersonId = review.PersonId,
+                SellerId = review.SellerId,
                 Score = review.Score,
                 Comment = review.Comment,
             };

@@ -47,9 +47,9 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 realReviews.Add(new ReviewViewModel
                 {
                     ReviewId = val.Id,
-                    UserName = val.Person.Username,
-                    Password = val.Person.Password,
-                    SellerName = val.Seller.Name,
+                    UserName = RepoPers.GetPersonById(val.PersonId).Username,
+                    Password = RepoPers.GetPersonById(val.PersonId).Password,
+                    SellerName = RepoSell.GetSellerById(val.SellerId).Name,
                     Score = val.Score,
                     Comment = val.Comment
                 });
@@ -98,8 +98,8 @@ namespace PaulsUsedGoods.WebApp.Controllers
                         Id = viewModel.ReviewId,
                         Comment = viewModel.Comment,
                         Score = viewModel.Score,
-                        Person = RepoPers.GetPeopleByName(viewModel.UserName).First(p => p.Username.ToLower() == viewModel.UserName.ToLower()),
-                        Seller = RepoSell.GetSellersByName(viewModel.SellerName).First(p => p.Name.ToLower() == viewModel.SellerName.ToLower())
+                        PersonId = RepoPers.GetPeopleByName(viewModel.UserName).First(p => p.Username.ToLower() == viewModel.UserName.ToLower()).Id,
+                        SellerId = RepoSell.GetSellersByName(viewModel.SellerName).First(p => p.Name.ToLower() == viewModel.SellerName.ToLower()).Id
                     };
                     List<string> mySellers = new List<string> ();
                     foreach (var val in RepoSell.GetSellersByName().ToList())
@@ -137,24 +137,24 @@ namespace PaulsUsedGoods.WebApp.Controllers
             var viewModel = new ReviewViewModel
             {
                 ReviewId = review.Id,
-                UserName = review.Person.Username,
-                Password = review.Person.Password,
-                SellerName = review.Seller.Name,
+                UserName = RepoPers.GetPersonById(review.PersonId).Username,
+                Password = RepoPers.GetPersonById(review.PersonId).Password,
+                SellerName = RepoSell.GetSellerById(review.SellerId).Name,
                 Score = review.Score,
                 Comment = review.Comment
             };
-            // List<string> mySellers = new List<string> ();
-            // foreach (var val in RepoSell.GetSellersByName().ToList())
-            // {
-            //     mySellers.Add(val.Name);
-            // }
-            // ViewData["SellerName"] = new SelectList (mySellers);
-            // List<string> myPeople = new List<string> ();
-            // foreach (var val in RepoPers.GetPeopleByName().ToList())
-            // {
-            //     myPeople.Add(val.Username);
-            // }
-            // ViewData["UserName"] = new SelectList (myPeople);
+            List<string> mySellers = new List<string> ();
+            foreach (var val in RepoSell.GetSellersByName().ToList())
+            {
+                mySellers.Add(val.Name);
+            }
+            ViewData["SellerName"] = new SelectList (mySellers);
+            List<string> myPeople = new List<string> ();
+            foreach (var val in RepoPers.GetPeopleByName().ToList())
+            {
+                myPeople.Add(val.Username);
+            }
+            ViewData["UserName"] = new SelectList (myPeople);
             return View(viewModel);
         }
 
@@ -163,7 +163,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id, [Bind("UserName,SellerName,Score,Comment")] ReviewViewModel viewModel)
+        public IActionResult Edit([FromRoute]int id, [Bind("UserName,SellerName,Score,Comment,Password")] ReviewViewModel viewModel)
         {
             try
             {
@@ -172,25 +172,13 @@ namespace PaulsUsedGoods.WebApp.Controllers
                     Domain.Model.Review review = RepoRev.GetReviewById(id);
                     review.Comment = viewModel.Comment;
                     review.Score = viewModel.Score;
-                    review.Person = RepoPers.GetPeopleByName(viewModel.UserName).First(p => p.Username.ToLower() == viewModel.UserName.ToLower());
-                    review.Seller = RepoSell.GetSellersByName(viewModel.SellerName).First(p => p.Name.ToLower() == viewModel.SellerName.ToLower());
+                    review.PersonId = RepoPers.GetPeopleByName(viewModel.UserName).First(p => p.Username.ToLower() == viewModel.UserName.ToLower()).Id;
+                    review.SellerId = RepoSell.GetSellersByName(viewModel.SellerName).First(p => p.Name.ToLower() == viewModel.SellerName.ToLower()).Id;
                     RepoRev.UpdateReview(review);
                     RepoRev.Save();
 
                     return RedirectToAction(nameof(Index));
                 }
-                List<string> mySellers = new List<string> ();
-                foreach (var val in RepoSell.GetSellersByName().ToList())
-                {
-                    mySellers.Add(val.Name);
-                }
-                ViewData["SellerName"] = new SelectList (mySellers);
-                List<string> myPeople = new List<string> ();
-                foreach (var val in RepoPers.GetPeopleByName().ToList())
-                {
-                    myPeople.Add(val.Username);
-                }
-                ViewData["UserName"] = new SelectList (myPeople);
                     return View(viewModel);
                 }
             catch (Exception)
@@ -206,9 +194,9 @@ namespace PaulsUsedGoods.WebApp.Controllers
             var viewModel = new ReviewViewModel
             {
                 ReviewId = review.Id,
-                UserName = review.Person.Username,
-                Password = review.Person.Password,
-                SellerName = review.Seller.Name,
+                UserName = RepoPers.GetPersonById(review.PersonId).Username,
+                Password = RepoPers.GetPersonById(review.PersonId).Password,
+                SellerName = RepoSell.GetSellerById(review.SellerId).Name,
                 Score = review.Score,
                 Comment = review.Comment
             };

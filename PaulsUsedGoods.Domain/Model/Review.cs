@@ -11,8 +11,8 @@ namespace PaulsUsedGoods.Domain.Model
         private string _comment;
 
         public int Id {get; set;}
-        public Person Person {get; set;}
-        public Seller Seller {get; set;}
+        public int PersonId {get; set;}
+        public int SellerId {get; set;}
 
         public int Score
         {

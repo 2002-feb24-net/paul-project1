@@ -55,6 +55,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .First(p => p.ReviewId == reviewId);
             return Mapper.MapReview(returnReview);
         }
+
         public void AddReview(Domain.Model.Review inputReview)
         {
             if (inputReview.Id != 0)
@@ -73,6 +74,16 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation($"Deleting review with ID {reviewId}");
             Context.Review entity = _dbContext.Reviews.Find(reviewId);
             _dbContext.Remove(entity);
+        }
+
+        public void DeleteReviewBySellerId(int sellerId)
+        {
+            _logger.LogInformation($"Deleting review with seller ID {sellerId}");
+            List<Context.Review> entity = _dbContext.Reviews.ToList().FindAll(p => p.SellerId == sellerId);
+            foreach (var val in entity)
+            {
+                _dbContext.Remove(val);
+            }
         }
         public void UpdateReview(Domain.Model.Review inputReview)
         {

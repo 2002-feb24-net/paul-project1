@@ -7,7 +7,6 @@ namespace PaulsUsedGoods.Domain.Model
     public class Seller
     {
         private string _name;
-
         public int Id {get; set;}
         public List<Item> Items {get; set;}
         public List<Review> Reviews {get; set;}
@@ -27,6 +26,19 @@ namespace PaulsUsedGoods.Domain.Model
                     throw new ArgumentException("That name contains a banned term!", nameof(value));
                 }
                 _name = value;
+            }
+        }
+
+        public double Rating
+        {
+            get
+            {
+                double AverageScore = 0;
+                foreach (var val in Reviews)
+                {
+                    AverageScore = AverageScore + val.Score;
+                }
+                return AverageScore/(Reviews.Count);
             }
         }
     }

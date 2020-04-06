@@ -35,6 +35,22 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             }
             return itemList.Select(Mapper.MapItem).ToList();
         }
+
+        public List<Domain.Model.Item> GetItemsBySellerName(string sellerName = null)
+        {
+            _logger.LogInformation($"Retrieving items with the seller name: {sellerName}");
+            List<Context.Item> itemList = _dbContext.Items
+                .Include(p => p.Order)
+                .Include(p => p.Store)
+                .Include(p => p.Seller)
+                .Include(p => p.TopicOption)
+                .ToList();
+            if (sellerName != null)
+            {
+                itemList = itemList.FindAll(p => p.ItemName.ToLower() == sellerName.ToLower());
+            }
+            return itemList.Select(Mapper.MapItem).ToList();
+        }
         public Domain.Model.Item GetItemById(int itemId)
         {
             _logger.LogInformation($"Retrieving item id: {itemId}");
@@ -63,6 +79,15 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             _logger.LogInformation($"Deleting item with ID {itemId}");
             Context.Item entity = _dbContext.Items.Find(itemId);
             _dbContext.Remove(entity);
+        }
+        public void DeleteItemBySellerId(int sellerId)
+        {
+            _logger.LogInformation($"Deleting item with ID {sellerId}");
+            List<Context.Item> entity = _dbContext.Items.ToList().FindAll(p => p.SellerId == sellerId);
+            foreach (var val in entity)
+            {
+                _dbContext.Remove(val);
+            }
         }
         public void UpdateItem(Domain.Model.Item inputItem)
         {

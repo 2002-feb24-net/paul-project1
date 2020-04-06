@@ -1,10 +1,18 @@
-﻿@model IEnumerable<PaulsUsedGoods.DataAccess.Context.Seller>
+﻿@model IEnumerable<PaulsUsedGoods.WebApp.ViewModels.SellerViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+
+<div>
+    <form asp-action="Index" method="GET" class="form-inline">
+        <label class="sr-only" for="search">Search:</label>
+        <input type="search" class="form-control mb-2 mr-sm-2 mb-sm-0" id="search" name="search" placeholder="Search"/>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,6 +22,12 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.SellerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AverageReview)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items)
             </th>
             <th></th>
         </tr>
@@ -25,9 +39,14 @@
                 @Html.DisplayFor(modelItem => item.SellerName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.SellerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SellerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SellerId">Delete</a>
+                @Html.DisplayFor(modelItem => item.AverageReview)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Items)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SellerId">Edit Seller</a> |
+                <a asp-action="Delete" asp-route-id="@item.SellerId">Delete Seller</a>
             </td>
         </tr>
 }

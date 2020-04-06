@@ -1,0 +1,75 @@
+@model PaulsUsedGoods.WebApp.ViewModels.ItemAnLogInViewModel
+
+@{
+    ViewData["Title"] = "Order";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().ItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().ItemDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().ItemPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().StoreName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().SellerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().TopicName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.First().OrderId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Items) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StoreName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SellerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TopicName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @using(Html.BeginForm("Order","Order"))
+                {
+                    <input type="hidden" asp-for="LogInViewModel" />
+                    <input type="hidden" asp-for="Items" />
+                    <input type="hidden" asp-for="selectedItems" />
+                    <input type="submit" value = "buy2"/>
+                }
+            <form asp-action="Order">
+                <input type="submit" asp-route-id="@item.ItemId" asp-route-id="@Model.LogInViewModel" asp-route-id="@Model.Items" asp-route-id="@Model.selectedItems" Value ="Buy Item" / >
+            </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<a asp-action="ViewCart">See Cart</a>

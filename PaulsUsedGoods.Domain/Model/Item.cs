@@ -17,11 +17,6 @@ namespace PaulsUsedGoods.Domain.Model
         public int SellerId {get; set;}
         public int TopicId { get; set; }
 
-        // public Store Store {get; set;}
-        // public Order Order {get; set;}
-        // public Seller Seller {get; set;}
-        // public TopicOption Topic { get; set; }
-
         public string Name
         {
             get => _name;

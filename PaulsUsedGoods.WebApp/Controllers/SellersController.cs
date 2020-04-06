@@ -5,148 +5,182 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PaulsUsedGoods.DataAccess.Context;
+using PaulsUsedGoods.Domain.Interfaces;
+using PaulsUsedGoods.WebApp.Controllers;
+using PaulsUsedGoods.WebApp.ViewModels;
 
 namespace PaulsUsedGoods.WebApp.Controllers
 {
     public class SellersController : Controller
     {
-        private readonly UsedGoodsDbContext _context;
 
-        public SellersController(UsedGoodsDbContext context)
+        public IItemRepository RepoItem { get; }
+        public IStoreRepository RepoStore { get; }
+        public IOrderRepository RepoOrd { get; }
+        public ITopicOptionRepository RepoTopi { get; }
+        public ISellerRepository RepoSell { get; }
+        public IPersonRepository RepoPers {get;}
+        public IReviewRepository RepoRev {get;}
+
+        public SellersController(IItemRepository repoItem,IStoreRepository repoStore, IOrderRepository repoOrd, ITopicOptionRepository repoTopi,ISellerRepository repoSell, IPersonRepository repoPers, IReviewRepository repoRev)
         {
-            _context = context;
+            RepoItem = repoItem ?? throw new ArgumentNullException(nameof(repoItem));
+            RepoStore = repoStore ?? throw new ArgumentNullException(nameof(repoStore));
+            RepoOrd = repoOrd ?? throw new ArgumentNullException(nameof(repoOrd));
+            RepoTopi = repoTopi ?? throw new ArgumentNullException(nameof(repoTopi));
+            RepoSell = repoSell ?? throw new ArgumentNullException(nameof(repoSell));
+            RepoPers = repoPers ?? throw new ArgumentNullException(nameof(repoPers));
+            RepoRev = repoRev ?? throw new ArgumentNullException(nameof(repoRev));
         }
 
-        // GET: Sellers
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Sellers.ToListAsync());
-        }
 
-        // GET: Sellers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Items
+        public ActionResult Index([FromQuery] string search = "")
         {
-            if (id == null)
+            List<Domain.Model.Seller> sellers = RepoSell.GetSellersByName();
+            List<SellerViewModel> realSellers = new List<SellerViewModel>();
+            foreach (var val in sellers)
             {
-                return NotFound();
+                realSellers.Add(new SellerViewModel
+                {
+                    SellerId = val.Id,
+                    SellerName = val.Name,
+                    Items = val.Items.Count,
+                    AverageReview = val.Rating
+                });
             }
-
-            var seller = await _context.Sellers
-                .FirstOrDefaultAsync(m => m.SellerId == id);
-            if (seller == null)
+            if (search != null)
             {
-                return NotFound();
+                return View(realSellers.FindAll(p => p.SellerName.ToLower().Contains(search.ToLower())));
             }
-
-            return View(seller);
+            return View(realSellers);
         }
-
-        // GET: Sellers/Create
+        // GET: Items/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sellers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Items/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SellerId,SellerName")] Seller seller)
+        public IActionResult Create([Bind("SellerName,Items,AverageReview")] SellerViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(seller);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    var seller = new Domain.Model.Seller
+                    {
+                        Id = viewModel.SellerId,
+                        Name = viewModel.SellerName,
+                        Items = RepoItem.GetItemsBySellerName(viewModel.SellerName)
+                            .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
+                            .First(p => p.Name == viewModel.SellerName).Id)),
+                        Reviews = RepoRev.GetReviewBySellerName(viewModel.SellerName)
+                            .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
+                            .First(p => p.Name == viewModel.SellerName).Id))
+                    };
+
+                    RepoSell.AddSeller(seller);
+                    RepoSell.Save();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(viewModel);
             }
-            return View(seller);
+            catch
+            {
+                return View(viewModel);
+            }
         }
 
-        // GET: Sellers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Items/Edit/5
+        public IActionResult Edit(int id)
         {
-            if (id == null)
+            // we pass the current values into the Edit view
+            // so that the input fields can be pre-populated instead of blank
+            // (important for good UX)
+            Domain.Model.Seller seller = RepoSell.GetSellerById(id);
+            var viewModel = new SellerViewModel
             {
-                return NotFound();
-            }
-
-            var seller = await _context.Sellers.FindAsync(id);
-            if (seller == null)
-            {
-                return NotFound();
-            }
-            return View(seller);
+                SellerId = seller.Id,
+                SellerName = seller.Name,
+                Items = seller.Items.Count,
+                AverageReview = seller.Rating
+            };
+            return View(viewModel);
         }
 
-        // POST: Sellers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Items/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SellerId,SellerName")] Seller seller)
+        public IActionResult Edit([FromRoute]int id, [Bind("SellerName,Items,AverageReview")] SellerViewModel viewModel)
         {
-            if (id != seller.SellerId)
+            try
             {
-                return NotFound();
-            }
+                if (ModelState.IsValid)
+                {
+                    Domain.Model.Seller seller = RepoSell.GetSellerById(id);
+                    seller.Name = viewModel.SellerName;
+                    seller.Items = RepoItem.GetItemsBySellerName(viewModel.SellerName)
+                        .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
+                        .First(p => p.Name == viewModel.SellerName).Id));
+                    seller.Reviews = RepoRev.GetReviewBySellerName(viewModel.SellerName)
+                        .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
+                        .First(p => p.Name == viewModel.SellerName).Id));
+                    RepoSell.UpdateSeller(seller);
+                    RepoSell.Save();
 
-            if (ModelState.IsValid)
+                    return RedirectToAction(nameof(Index));
+                }
+                    return View(viewModel);
+                }
+            catch (Exception)
             {
-                try
-                {
-                    _context.Update(seller);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SellerExists(seller.SellerId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(viewModel);
             }
-            return View(seller);
         }
 
-        // GET: Sellers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Items/Delete/5
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+            Domain.Model.Seller seller = RepoSell.GetSellerById(id);
+            var viewModel = new SellerViewModel
             {
-                return NotFound();
-            }
-
-            var seller = await _context.Sellers
-                .FirstOrDefaultAsync(m => m.SellerId == id);
-            if (seller == null)
-            {
-                return NotFound();
-            }
-
-            return View(seller);
+                SellerId = seller.Id,
+                SellerName = seller.Name,
+                Items = seller.Items.Count,
+                AverageReview = seller.Rating
+            };
+            return View(viewModel);
         }
 
-        // POST: Sellers/Delete/5
+        // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult Delete(int id, [BindNever]IFormCollection collection)
         {
-            var seller = await _context.Sellers.FindAsync(id);
-            _context.Sellers.Remove(seller);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            try
+            {
+                RepoRev.DeleteReviewBySellerId(id);
+                RepoItem.DeleteItemBySellerId(id);
+                RepoSell.DeleteSellerById(id);
+                RepoSell.Save();
 
-        private bool SellerExists(int id)
-        {
-            return _context.Sellers.Any(e => e.SellerId == id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
