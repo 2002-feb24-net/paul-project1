@@ -1,5 +1,12 @@
 4/5/20
-can now create,edit,delete: people, reviews, sellers
+can now create,edit,delete: people, reviews, sellers, stores(half way done, untested)
+can now list items to buy based on user's store
+can now add items to a cart that persists (THIS TOOK MY FOREVER)
+numerous bugfixes (undocumented)
+dirtied code while trying various fixes
+fixed publish pipeline
+added populateitemlist for buying logic
+added singleton dependency injection that tracks the order
 
 4/4/20
 Tweaked item view to now show all related info
