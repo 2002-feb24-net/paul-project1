@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PaulsUsedGoods.Domain.Interfaces;
 
 namespace PaulsUsedGoods.Domain.Model
 {
-    public class Order
+    public class Order : IOrder
     {
+        public List<int> itemsInOrder {get; set;}
+        public string Username {get; set;}
         private DateTime _date;
         private double _price;
         private List<Item> _items;
 
         public int Id {get; set;}
+
+        public Order()
+        {
+            itemsInOrder = new List<int>();
+        }
 
         public DateTime Date
         {
@@ -49,6 +57,11 @@ namespace PaulsUsedGoods.Domain.Model
                 }
                 _price = value;
             }
+        }
+
+        public void AddToCurrentOrder(int id)
+        {
+            itemsInOrder.Add(id);
         }
     }
 }

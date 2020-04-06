@@ -56,16 +56,7 @@
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
             <td>
-                @using(Html.BeginForm("Order","Order"))
-                {
-                    <input type="hidden" asp-for="LogInViewModel" />
-                    <input type="hidden" asp-for="Items" />
-                    <input type="hidden" asp-for="selectedItems" />
-                    <input type="submit" value = "buy2"/>
-                }
-            <form asp-action="Order">
-                <input type="submit" asp-route-id="@item.ItemId" asp-route-id="@Model.LogInViewModel" asp-route-id="@Model.Items" asp-route-id="@Model.selectedItems" Value ="Buy Item" / >
-            </form>
+                    <a asp-action="AddToOrder" asp-route-id="@item.ItemId"> Buy Item </a>
             </td>
         </tr>
 }

@@ -40,23 +40,22 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // GET: Items
         public ActionResult Index([FromQuery] string search = "")
         {
-            List<Domain.Model.Seller> sellers = RepoSell.GetSellersByName();
-            List<SellerViewModel> realSellers = new List<SellerViewModel>();
-            foreach (var val in sellers)
+            List<Domain.Model.Store> stores = RepoStore.GetStoresByName();
+            List<StoreViewModel> realStores = new List<StoreViewModel>();
+            foreach (var val in stores)
             {
-                realSellers.Add(new SellerViewModel
+                realStores.Add(new StoreViewModel
                 {
-                    SellerId = val.Id,
-                    SellerName = val.Name,
-                    Items = val.Items.Count,
-                    AverageReview = val.Rating
+                    StoreId = val.Id,
+                    LocationName = val.Name,
+                    ItemCount = val.Items.Count
                 });
             }
             if (search != null)
             {
-                return View(realSellers.FindAll(p => p.SellerName.ToLower().Contains(search.ToLower())));
+                return View(realStores.FindAll(p => p.LocationName.ToLower().Contains(search.ToLower())));
             }
-            return View(realSellers);
+            return View(realStores);
         }
         // GET: Items/Create
         public IActionResult Create()
@@ -69,26 +68,23 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("SellerName,Items,AverageReview")] SellerViewModel viewModel)
+        public IActionResult Create([Bind("LocationName")] StoreViewModel viewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var seller = new Domain.Model.Seller
+                    var store = new Domain.Model.Store
                     {
-                        Id = viewModel.SellerId,
-                        Name = viewModel.SellerName,
-                        Items = RepoItem.GetItemsBySellerName(viewModel.SellerName)
-                            .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
-                            .First(p => p.Name == viewModel.SellerName).Id)),
-                        Reviews = RepoRev.GetReviewBySellerName(viewModel.SellerName)
-                            .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
-                            .First(p => p.Name == viewModel.SellerName).Id))
+                        Id = viewModel.StoreId,
+                        Name = viewModel.LocationName,
+                        Items = RepoItem.GetItemsByStoreName(viewModel.LocationName)
+                            .FindAll(p => p.StoreId == (RepoStore.GetStoresByName(viewModel.LocationName)
+                            .First(p => p.Name == viewModel.LocationName).Id)),
                     };
 
-                    RepoSell.AddSeller(seller);
-                    RepoSell.Save();
+                    RepoStore.AddStore(store);
+                    RepoStore.Save();
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -106,13 +102,12 @@ namespace PaulsUsedGoods.WebApp.Controllers
             // we pass the current values into the Edit view
             // so that the input fields can be pre-populated instead of blank
             // (important for good UX)
-            Domain.Model.Seller seller = RepoSell.GetSellerById(id);
-            var viewModel = new SellerViewModel
+            Domain.Model.Store store = RepoStore.GetStoreById(id);
+            var viewModel = new StoreViewModel
             {
-                SellerId = seller.Id,
-                SellerName = seller.Name,
-                Items = seller.Items.Count,
-                AverageReview = seller.Rating
+                StoreId = store.Id,
+                LocationName = store.Name,
+                ItemCount = store.Items.Count
             };
             return View(viewModel);
         }
@@ -122,22 +117,19 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id, [Bind("SellerName,Items,AverageReview")] SellerViewModel viewModel)
+        public IActionResult Edit([FromRoute]int id, [Bind("SellerName,Items,AverageReview")] StoreViewModel viewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Domain.Model.Seller seller = RepoSell.GetSellerById(id);
-                    seller.Name = viewModel.SellerName;
-                    seller.Items = RepoItem.GetItemsBySellerName(viewModel.SellerName)
-                        .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
-                        .First(p => p.Name == viewModel.SellerName).Id));
-                    seller.Reviews = RepoRev.GetReviewBySellerName(viewModel.SellerName)
-                        .FindAll(p => p.SellerId == (RepoSell.GetSellersByName(viewModel.SellerName)
-                        .First(p => p.Name == viewModel.SellerName).Id));
-                    RepoSell.UpdateSeller(seller);
-                    RepoSell.Save();
+                    Domain.Model.Store store = RepoStore.GetStoreById(id);
+                    store.Name = viewModel.LocationName;
+                    store.Items = RepoItem.GetItemsByStoreName(viewModel.LocationName)
+                        .FindAll(p => p.StoreId == (RepoStore.GetStoresByName(viewModel.LocationName)
+                        .First(p => p.Name == viewModel.LocationName).Id));
+                    RepoStore.UpdateStore(store);
+                    RepoStore.Save();
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -152,13 +144,12 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // GET: Items/Delete/5
         public IActionResult Delete(int id)
         {
-            Domain.Model.Seller seller = RepoSell.GetSellerById(id);
-            var viewModel = new SellerViewModel
+            Domain.Model.Store store = RepoStore.GetStoreById(id);
+            var viewModel = new StoreViewModel
             {
-                SellerId = seller.Id,
-                SellerName = seller.Name,
-                Items = seller.Items.Count,
-                AverageReview = seller.Rating
+                StoreId = store.Id,
+                LocationName = store.Name,
+                ItemCount = store.Items.Count
             };
             return View(viewModel);
         }
@@ -170,8 +161,8 @@ namespace PaulsUsedGoods.WebApp.Controllers
         {
             try
             {
-                RepoRev.DeleteReviewBySellerId(id);
-                RepoItem.DeleteItemBySellerId(id);
+                RepoPers.DeletePeopleByStoreId(id);
+                RepoItem.DeleteItemByStoreId(id);
                 RepoSell.DeleteSellerById(id);
                 RepoSell.Save();
 

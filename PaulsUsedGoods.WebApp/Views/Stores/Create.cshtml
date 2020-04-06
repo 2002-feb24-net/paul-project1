@@ -1,4 +1,4 @@
-﻿@model PaulsUsedGoods.DataAccess.Context.Store
+﻿@model PaulsUsedGoods.WebApp.ViewModels.StoreViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -17,6 +17,8 @@
                 <input asp-for="LocationName" class="form-control" />
                 <span asp-validation-for="LocationName" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="StoreId" />
+            <input type="hidden" asp-for="ItemCount" value=0 />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

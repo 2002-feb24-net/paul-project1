@@ -10,10 +10,8 @@ namespace PaulsUsedGoods.Domain.Interfaces
         Person GetPersonById(int personId);
         void AddPerson(Person inputPerson);
         void DeletePersonById(int personId);
+        void DeletePeopleByStoreId(int storeId);
         void UpdatePerson(Person inputPerson);
-// // ! RELATED TO ORDERS
-//         List<Order> GetOrderByName(string personName = null);
-//         Order GetOrderById(int orderId);
 // ! GENERAL COMMANDS
         void Save();
     }

@@ -34,17 +34,6 @@ namespace PaulsUsedGoods.Domain.Model
                 _name = value;
             }
         }
-        public List<Item> Items
-        {
-            get => _items;
-            set
-            {
-                if(value.Count == 0)
-                {
-                    throw new ArgumentException("There is no input items!", nameof(value));
-                }
-                _items = value;
-            }
-        }
+        public List<Item> Items {get;set;}
     }
 }

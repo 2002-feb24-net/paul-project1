@@ -31,6 +31,7 @@ namespace Project1
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddSingleton<IOrder, PaulsUsedGoods.Domain.Model.Order>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

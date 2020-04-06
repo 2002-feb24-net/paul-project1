@@ -58,6 +58,15 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             Context.Person entity = _dbContext.People.Find(personId);
             _dbContext.Remove(entity);
         }
+        public void DeletePeopleByStoreId(int storeId)
+        {
+            _logger.LogInformation($"Deleting person with store ID {storeId}");
+            List<Context.Person> entity = _dbContext.People.ToList().FindAll(p => p.StoreId == storeId);
+            foreach (var val in entity)
+            {
+                _dbContext.Remove(entity);
+            }
+        }
         public void UpdatePerson(Domain.Model.Person inputPerson)
         {
             _logger.LogInformation($"Updating person with ID {inputPerson.Id}");
