@@ -79,7 +79,9 @@ namespace PaulsUsedGoods.DataAccess.Migrations
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Order", b =>
                 {
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -100,7 +102,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                         new
                         {
                             OrderId = 1,
-                            OrderDate = new DateTime(2020, 4, 3, 21, 35, 22, 196, DateTimeKind.Local).AddTicks(7067),
+                            OrderDate = new DateTime(2020, 4, 6, 23, 55, 6, 546, DateTimeKind.Local).AddTicks(235),
                             PersonId = 1,
                             TotalOrderPrice = 2.5
                         });
@@ -300,7 +302,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     b.HasOne("PaulsUsedGoods.DataAccess.Context.Person", "Person")
                         .WithMany("Order")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

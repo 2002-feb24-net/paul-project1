@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace PaulsUsedGoods.WebApp.ViewModels
 {
@@ -28,5 +29,9 @@ namespace PaulsUsedGoods.WebApp.ViewModels
         [Required]
         [DisplayFormat(DataFormatString = "{0:#.##}")]
         public double TotalOrderPrice {get; set;}
+
+
+        [Display(Name = "Items In Order")]
+        public List<ItemViewModel> Items {get; set;}
     }
 }

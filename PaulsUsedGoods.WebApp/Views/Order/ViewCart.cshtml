@@ -4,10 +4,10 @@
     ViewData["Title"] = "ViewCart";
 }
 
-<h1>Details</h1>
+<h1>Your Cart</h1>
 
 <div>
-    <h4>Restaurant</h4>
+    <h4>Paul's Used Goods</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -79,7 +79,54 @@
     }
 
     <div>
-        @Html.ActionLink("Pay", "Finalize")
-        <a asp-action="Order">Back to Buy List</a>
+        <p style ="font-size:120%">
+            @Html.ActionLink("Pay", "Finalize")
+        <p>
+    </div>
+    <div>
+        <a asp-action="Order" style ="font-size:120%">Back to Buy List</a>
     </div>
 </div>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<h3>Suggested Item:</h3>
+@if (Model.SuggestedItem != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SuggestedItem.ItemName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SuggestedItem.ItemDescription)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SuggestedItem.ItemPrice)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => model.SuggestedItem.ItemName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SuggestedItem.ItemDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.SuggestedItem.ItemPrice)
+                        </td>
+                        <td>
+                            <a asp-action="ViewCart" asp-route-id=@Model.SuggestedItem.ItemId>Add to Order</a>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    }

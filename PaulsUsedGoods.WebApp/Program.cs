@@ -47,7 +47,7 @@ namespace Project1
 
 
 /*
-TODO place orders to store locations for customers
+// TODO place orders to store locations for customers
 // TODO add a new customer
 // TODO search customers by name
 TODO display details of an order
@@ -56,12 +56,14 @@ TODO display details of an order
 // TODO client-side validation [new]
 // TODO server-side validation [new]
 // TODO exception handling
-TODO CSRF prevention
+// TODO CSRF prevention
 // TODO persistent data; no prices, customers, order history, etc. hardcoded in C#
 // TODO logging [new]
+// TODO publicly available online [new]
 TODO (optional: order history can be sorted by earliest, latest, cheapest, most expensive)
-TODO (optional: get a suggested order for a customer based on his order history)
+//TODO (optional: get a suggested order for a customer based on his order history)
 TODO (optional: display some statistics based on order history)
+// TODO continuous integration via Git and Azure Pipelines, deploying to Azure App Service [new]
 // TODO use EF Core (either database-first approach or code-first approach)
 // TODO use an Azure SQL DB in third normal form
 // TODO don't use public fields
@@ -81,8 +83,7 @@ TODO (optional: some additional business rules, like special deals)
 // TODO location has an inventory
 // TODO location inventory decreases when orders are accepted
 // TODO location rejects orders that cannot be fulfilled with remaining inventory
-TODO (optional: for at least one product, more than one inventory item decrements when ordering that product)
-TODO user interface
+//TODO (optional: for at least one product, more than one inventory item decrements when ordering that product)
 // TODO ASP.NET Core MVC web application [new]
 // TODO separate request processing and presentation concerns with MVC pattern [new]
 // TODO strongly-typed views [new]
@@ -94,9 +95,9 @@ TODO customize the default styling to some extent [new]
 // TODO contains EF Core DbContext and entity classes
 // TODO contains data access logic but no business logic
 // TODO use repository pattern for separation of concerns
-TODO at least 10 test methods
-TODO focus on unit testing business logic
-TODO data access tests (if present) should not impact the app's actual database [new]
+// TODO at least 10 test methods
+// TODO focus on unit testing business logic
+// TODO data access tests (if present) should not impact the app's actual database [new]
 */
 
 /*

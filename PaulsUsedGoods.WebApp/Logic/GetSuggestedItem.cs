@@ -40,7 +40,11 @@ namespace PaulsUsedGoods.WebApp.Logic
 
             Random rand = new Random();
             int i = rand.Next(0,realItems.Count);
-            return realItems[i];
+            if (realItems.Count > 0)
+            {
+                return realItems[i];
+            }
+            return null;
         }
     }
 }

@@ -126,7 +126,7 @@ namespace PaulsUsedGoods.DataAccess.Context
                     .IsRequired();
                 entity.HasOne(e => e.Person)
                     .WithMany(e => e.Order)
-                    .HasForeignKey(e => e.OrderId);
+                    .HasForeignKey(e => e.PersonId);
             });
 
             modelBuilder.Entity<Review>(entity =>

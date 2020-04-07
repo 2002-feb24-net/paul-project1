@@ -14,11 +14,13 @@ namespace PaulsUsedGoods.DataAccess.Repositories
 
         private readonly UsedGoodsDbContext _dbContext;
         private readonly ILogger<ItemRepository> _logger;
+        public IItemRepository Repo { get; }
 
-        public OrderRepository(UsedGoodsDbContext dbContext, ILogger<ItemRepository> logger)
+        public OrderRepository(UsedGoodsDbContext dbContext, ILogger<ItemRepository> logger, IItemRepository repo)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 // ! CLASS SPECIFIC
         public List<Domain.Model.Order> GetOrdersByName(string orderName = null)
@@ -52,14 +54,24 @@ namespace PaulsUsedGoods.DataAccess.Repositories
         {
             if (inputOrder.Id != 0)
             {
-                _logger.LogWarning($"Item to be added has an ID ({inputOrder.Id}) already: ignoring.");
+                _logger.LogWarning($"Order to be added has an ID ({inputOrder.Id}) already: ignoring.");
             }
 
             _logger.LogInformation("Adding order");
 
-            Context.Order entity = Mapper.UnMapOrder(inputOrder);
-            entity.OrderId = 0;
+            Context.Order entity = new Context.Order
+            {
+                PersonId = inputOrder.UserId,
+                OrderDate = inputOrder.Date,
+                TotalOrderPrice = inputOrder.Price,
+            };
+            entity.OrderId = 0; //_dbContext.Orders.Max(p => p.OrderId)+1;
             _dbContext.Add(entity);
+            foreach (var val in inputOrder.Items)
+            {
+                val.OrderId = _dbContext.Orders.Max(p => p.OrderId);
+                Repo.UpdateItem(val);
+            }
         }
         public void DeleteOrderById(int orderId)
         {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PaulsUsedGoods.DataAccess.Migrations
 {
-    public partial class initialmigration : Migration
+    public partial class remadeMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     SellerId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SellerName = table.Column<string>(maxLength: 50, nullable: false)
+                    SellerName = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -26,7 +26,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     StoreId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LocationName = table.Column<string>(maxLength: 50, nullable: false)
+                    LocationName = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     TopicOptionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TopicName = table.Column<string>(maxLength: 50, nullable: false)
+                    TopicName = table.Column<string>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +74,8 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(nullable: false),
+                    OrderId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PersonId = table.Column<int>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     TotalOrderPrice = table.Column<double>(nullable: false)
@@ -83,8 +84,8 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_People_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Orders_People_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "PersonId",
                         onDelete: ReferentialAction.Cascade);
@@ -140,7 +141,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Items_Sellers_SellerId",
                         column: x => x.SellerId,
@@ -152,7 +153,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                         column: x => x.StoreId,
                         principalTable: "Stores",
                         principalColumn: "StoreId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Items_TopicOptions_TopicId",
                         column: x => x.TopicId,
@@ -162,14 +163,39 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Sellers",
+                columns: new[] { "SellerId", "SellerName" },
+                values: new object[] { 1, "Fat Joe" });
+
+            migrationBuilder.InsertData(
                 table: "Stores",
                 columns: new[] { "StoreId", "LocationName" },
                 values: new object[] { 1, "Arlington,TX" });
 
             migrationBuilder.InsertData(
+                table: "TopicOptions",
+                columns: new[] { "TopicOptionId", "TopicName" },
+                values: new object[] { 1, "Candy" });
+
+            migrationBuilder.InsertData(
                 table: "People",
                 columns: new[] { "PersonId", "Employee", "FirstName", "LastName", "Password", "StoreId", "Username" },
                 values: new object[] { 1, true, "ad", "min", "admin", 1, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "OrderId", "OrderDate", "PersonId", "TotalOrderPrice" },
+                values: new object[] { 1, new DateTime(2020, 4, 6, 23, 55, 6, 546, DateTimeKind.Local).AddTicks(235), 1, 2.5 });
+
+            migrationBuilder.InsertData(
+                table: "Reviews",
+                columns: new[] { "ReviewId", "Comment", "PersonId", "Score", "SellerId" },
+                values: new object[] { 1, "All candy is half eaten, so I am giving half of a ", 1, 6, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Items",
+                columns: new[] { "ItemId", "ItemDescription", "ItemName", "ItemPrice", "OrderId", "SellerId", "StoreId", "TopicId" },
+                values: new object[] { 1, "Half of a Kit-Kat bar", "Candy Bar", 2.5, 1, 1, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_OrderId",

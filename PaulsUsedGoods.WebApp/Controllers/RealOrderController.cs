@@ -57,6 +57,35 @@ namespace PaulsUsedGoods.WebApp.Controllers
             }
             return View(realOrders);
         }
+
+        public ActionResult Details(int id)
+        {
+            Domain.Model.Order order = RepoOrd.GetOrderById(id);
+            var viewModel = new OrderViewModel
+            {
+                OrderId = order.Id,
+                SortMethod = "Default",
+                PersonName = order.Username,
+                StoreName = RepoStore.GetStoreById(RepoPers.GetPersonById(order.UserId).StoreId).Name,
+                OrderDate = order.Date,
+                TotalOrderPrice = order.Price,
+                Items = order.Items.Select(y => new ItemViewModel
+                {
+                    ItemId = y.Id,
+                    ItemName = y.Name,
+                    ItemDescription = y.Description,
+                    ItemPrice = y.Price,
+                    StoreName = RepoStore.GetStoreById(y.StoreId).Name,
+                    OrderId = y.OrderId,
+                    SellerName = RepoSell.GetSellerById(y.SellerId).Name,
+                    TopicName = RepoTopi.GetTopicById(y.TopicId).Topic
+                }).ToList()
+            };
+            List<string> mySorters = new List<string> {"Default","Old to New","New to Old","Low Price to High Price", "High Price to Low Price"};
+            ViewData["Sorter"] = new SelectList (mySorters);
+            return View(viewModel);
+        }
+
         // GET: Items/Create
         public IActionResult Delete(int id)
         {

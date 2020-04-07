@@ -10,8 +10,8 @@ using PaulsUsedGoods.DataAccess.Context;
 namespace PaulsUsedGoods.DataAccess.Migrations
 {
     [DbContext(typeof(UsedGoodsDbContext))]
-    [Migration("20200402005048_initialmigration")]
-    partial class initialmigration
+    [Migration("20200407045506_remadeMigration")]
+    partial class remadeMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,7 +40,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                     b.Property<double>("ItemPrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("SellerId")
@@ -63,12 +63,27 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                     b.HasIndex("TopicId");
 
                     b.ToTable("Items");
+
+                    b.HasData(
+                        new
+                        {
+                            ItemId = 1,
+                            ItemDescription = "Half of a Kit-Kat bar",
+                            ItemName = "Candy Bar",
+                            ItemPrice = 2.5,
+                            OrderId = 1,
+                            SellerId = 1,
+                            StoreId = 1,
+                            TopicId = 1
+                        });
                 });
 
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Order", b =>
                 {
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -84,6 +99,15 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = 1,
+                            OrderDate = new DateTime(2020, 4, 6, 23, 55, 6, 546, DateTimeKind.Local).AddTicks(235),
+                            PersonId = 1,
+                            TotalOrderPrice = 2.5
+                        });
                 });
 
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Person", b =>
@@ -167,6 +191,16 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Reviews");
+
+                    b.HasData(
+                        new
+                        {
+                            ReviewId = 1,
+                            Comment = "All candy is half eaten, so I am giving half of a ",
+                            PersonId = 1,
+                            Score = 6,
+                            SellerId = 1
+                        });
                 });
 
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Seller", b =>
@@ -178,12 +212,19 @@ namespace PaulsUsedGoods.DataAccess.Migrations
 
                     b.Property<string>("SellerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("SellerId");
 
                     b.ToTable("Sellers");
+
+                    b.HasData(
+                        new
+                        {
+                            SellerId = 1,
+                            SellerName = "Fat Joe"
+                        });
                 });
 
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Store", b =>
@@ -195,8 +236,8 @@ namespace PaulsUsedGoods.DataAccess.Migrations
 
                     b.Property<string>("LocationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("StoreId");
 
@@ -219,21 +260,26 @@ namespace PaulsUsedGoods.DataAccess.Migrations
 
                     b.Property<string>("TopicName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("TopicOptionId");
 
                     b.ToTable("TopicOptions");
+
+                    b.HasData(
+                        new
+                        {
+                            TopicOptionId = 1,
+                            TopicName = "Candy"
+                        });
                 });
 
             modelBuilder.Entity("PaulsUsedGoods.DataAccess.Context.Item", b =>
                 {
                     b.HasOne("PaulsUsedGoods.DataAccess.Context.Order", "Order")
                         .WithMany("Item")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("PaulsUsedGoods.DataAccess.Context.Seller", "Seller")
                         .WithMany("Item")
@@ -258,7 +304,7 @@ namespace PaulsUsedGoods.DataAccess.Migrations
                 {
                     b.HasOne("PaulsUsedGoods.DataAccess.Context.Person", "Person")
                         .WithMany("Order")
-                        .HasForeignKey("OrderId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -106,7 +106,7 @@ namespace PaulsUsedGoods.DataAccess
                     Price = order.TotalOrderPrice,
                     Username = order.Person.Username,
                     UserId = order.PersonId,
-                    Items = order.Item.Select(MapItem).ToList()
+                    Items = order.Item.Select(MapItem).ToList(),
                 };
             }
         }
@@ -118,7 +118,8 @@ namespace PaulsUsedGoods.DataAccess
                 OrderId = order.Id,
                 OrderDate = order.Date,
                 TotalOrderPrice = order.Price,
-                PersonId = order.UserId
+                PersonId = order.UserId,
+                Item = order.Items.Select(UnMapItem).ToList()
             };
         }
 

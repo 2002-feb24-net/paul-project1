@@ -4,7 +4,19 @@ can now create,edit,delete,index: all
 Fixed webapp and database communication
 Changed layout and navigation bar spacing
 fixed some bugs (undocumented null errors from data structure changes)
-
+fixed topic view
+added viewcart
+added checkout
+added suggested item
+fixed bug in table
+    and re-migrated....
+        all data in tables lost.....
+Can now complete order
+can now make a new order
+can now see orders
+can now look closer at an order
+added sort inside of order view (unimplemented)
+reworked order view with minor internal css
 
 4/5/20
 can now create,edit,delete,index: people, reviews, sellers, stores(half way done, untested)

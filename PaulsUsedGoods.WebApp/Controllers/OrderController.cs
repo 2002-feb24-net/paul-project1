@@ -116,7 +116,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
             }
         }
 
-        public ActionResult ViewCart()
+        public ActionResult ViewCart(int id = 0)
         {
             double price = 0;
             List<Domain.Model.Item> orderItemsList = new List<Domain.Model.Item>();
@@ -124,6 +124,12 @@ namespace PaulsUsedGoods.WebApp.Controllers
             {
                 orderItemsList.Add(RepoItem.GetItemById(val));
                 price = price + RepoItem.GetItemById(val).Price;
+            }
+            if (id > 0)
+            {
+                MyOrder.itemsInOrder.Add(id);
+                orderItemsList.Add(RepoItem.GetItemById(id));
+                price = price + RepoItem.GetItemById(id).Price;
             }
             var viewModel = new DetailedOrderViewModel
             {
@@ -134,10 +140,35 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 ItemList = orderItemsList,
                 SuggestedItem = GetSuggestedItem.Suggest(RepoItem,RepoStore, RepoOrd, RepoTopi,RepoSell, RepoPers, RepoRev, MyOrder)
             };
-
             return View(viewModel);
         }
 
+        public ActionResult Finalize()
+        {
+            try
+            {
+                double price = 0;
+                List<Domain.Model.Item> orderItemsList = new List<Domain.Model.Item>();
+                foreach (var val in MyOrder.itemsInOrder)
+                {
+                    orderItemsList.Add(RepoItem.GetItemById(val));
+                    price = price + RepoItem.GetItemById(val).Price;
+                }
+                Domain.Model.Order myNewOrder= new Domain.Model.Order
+                {
+                    UserId = RepoPers.GetPeopleByName(MyOrder.Username).First().Id,
+                    Date = DateTime.Now,
+                    Price = price,
+                    Items = orderItemsList
+                };
+                RepoOrd.AddOrder(myNewOrder);
+                RepoOrd.Save();
+            }
+            catch (Exception)
+            {
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
     }
 }
