@@ -23,7 +23,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
         public ISellerRepository RepoSell { get; }
         public IPersonRepository RepoPers {get;}
         public IReviewRepository RepoRev {get;}
-        public IOrder MyOrder {get;}
+        public IOrder MyOrder {get; set;}
 
         public OrderController(IItemRepository repoItem,IStoreRepository repoStore, IOrderRepository repoOrd, ITopicOptionRepository repoTopi,ISellerRepository repoSell, IPersonRepository repoPers, IReviewRepository repoRev, IOrder order)
         {
@@ -163,6 +163,8 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 };
                 RepoOrd.AddOrder(myNewOrder);
                 RepoOrd.Save();
+                MyOrder.Username = "";
+                MyOrder.itemsInOrder = null;
             }
             catch
             {

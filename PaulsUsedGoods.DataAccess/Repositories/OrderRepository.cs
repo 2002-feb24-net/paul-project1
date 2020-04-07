@@ -67,6 +67,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             };
             entity.OrderId = 0; //_dbContext.Orders.Max(p => p.OrderId)+1;
             _dbContext.Add(entity);
+            Save();
             foreach (var val in inputOrder.Items)
             {
                 val.OrderId = _dbContext.Orders.Max(p => p.OrderId);
