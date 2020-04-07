@@ -44,11 +44,19 @@ namespace PaulsUsedGoods.WebApp.Controllers
             List<StoreViewModel> realStores = new List<StoreViewModel>();
             foreach (var val in stores)
             {
+                int stockcount = 0;
+                foreach(var val2 in val.Items)
+                {
+                    if (val2.OrderId == null || val2.OrderId == 0)
+                    {
+                        stockcount++;
+                    }
+                }
                 realStores.Add(new StoreViewModel
                 {
                     StoreId = val.Id,
                     LocationName = val.Name,
-                    ItemCount = val.Items.Count
+                    ItemCount = stockcount
                 });
             }
             if (search != null)

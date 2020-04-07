@@ -56,7 +56,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
             }
             if (search != null)
             {
-                return View(realReviews.FindAll(p => p.UserName.ToLower().Contains(search.ToLower()) || p.SellerName.ToLower().Contains(search.ToLower())));
+                return View(realReviews.FindAll(p => p.UserName.ToLower().Contains(search.ToLower()) || p.SellerName.ToLower().Contains(search.ToLower()) || RepoRev.GetReviewById(p.ReviewId).Comment.ToLower().Contains(search.ToLower())));
             }
             return View(realReviews);
         }

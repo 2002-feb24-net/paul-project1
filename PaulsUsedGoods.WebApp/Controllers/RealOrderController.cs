@@ -53,7 +53,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
             }
             if (search != null)
             {
-                return View(realOrders.FindAll(p => p.PersonName.ToLower().Contains(search.ToLower())));
+                return View(realOrders.FindAll(p => p.PersonName.ToLower().Contains(search.ToLower()) || (RepoStore.GetStoreById(RepoPers.GetPeopleByName(p.PersonName).First().StoreId).Name.ToLower()).Contains(search.ToLower())));
             }
             return View(realOrders);
         }

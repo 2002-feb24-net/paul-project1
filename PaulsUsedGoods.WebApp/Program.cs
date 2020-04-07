@@ -50,7 +50,7 @@ namespace Project1
 // TODO place orders to store locations for customers
 // TODO add a new customer
 // TODO search customers by name
-TODO display details of an order
+// TODO display details of an order
 // TODO display all order history of a store location
 //TODO display all order history of a customer
 // TODO client-side validation [new]
@@ -89,7 +89,7 @@ TODO (optional: some additional business rules, like special deals)
 // TODO strongly-typed views [new]
 // TODO minimize logic in views [new]
 // TODO use dependency injection [new]
-TODO customize the default styling to some extent [new]
+// TODO customize the default styling to some extent [new]
 // TODO keep CodeNamesLikeThis out of the visible UI [new]
 // TODO class library
 // TODO contains EF Core DbContext and entity classes

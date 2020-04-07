@@ -19,6 +19,8 @@ added sort inside of order view (unimplemented)
 reworked order view with minor internal css
 my changelog has devolved faster than my coding has. Never lucky.
 fixed the failed test (null error)
+added search for city in order
+v1.3 completion snapshot: https://gyazo.com/7bfe32e570bc188dfd98eddc79a06c27
 
 4/5/20
 can now create,edit,delete,index: people, reviews, sellers, stores(half way done, untested)
