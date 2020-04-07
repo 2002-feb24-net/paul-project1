@@ -164,8 +164,9 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 RepoOrd.AddOrder(myNewOrder);
                 RepoOrd.Save();
             }
-            catch (Exception)
+            catch
             {
+                return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Index", "Home");
         }
