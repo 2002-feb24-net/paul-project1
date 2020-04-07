@@ -57,32 +57,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 if (ModelState.IsValid)
                 {
                     MyOrder.Username = viewModelLog.Username;
-                    // List<Domain.Model.Item> items = RepoItem.GetItemsByName();
-                    // List<ItemViewModel> realItems = new List<ItemViewModel>();
-                    // foreach (var val in items)
-                    // {
-                    //     if (val.StoreId == (RepoPers.GetPeopleByName(viewModelLog.Username).First( p => p.Username.ToLower() == viewModelLog.Username.ToLower())).StoreId)
-                    //     {
-                    //         realItems.Add(new ItemViewModel
-                    //         {
-                    //             ItemId = val.Id,
-                    //             ItemName = val.Name,
-                    //             ItemDescription = val.Description,
-                    //             ItemPrice = val.Price,
-                    //             StoreName = RepoStore.GetStoreById(val.StoreId).Name,
-                    //             OrderId = val.OrderId,
-                    //             SellerName = RepoSell.GetSellerById(val.SellerId).Name,
-                    //             TopicName = RepoTopi.GetTopicById(val.TopicId).Topic
-                    //         });
-                    //     }
-                    // }
-
                     var itemlogin = PopulateItemList.Populate(RepoItem,RepoStore, RepoOrd, RepoTopi,RepoSell, RepoPers, RepoRev, MyOrder); // new ItemAnLogInViewModel
-                    // {
-                    //     Items = realItems,
-                    //     LogInViewModel = viewModelLog,
-                    //     selectedItems = new List<ItemViewModel>()
-                    // };
 
                     if(RepoPers.GetPeopleByName(viewModelLog.Username).First(p => p.Username == viewModelLog.Username).Password == viewModelLog.Password)
                     {
@@ -96,38 +71,6 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 return View(viewModelLog);
             }
         }
-
-        // public ActionResult Order([Bind("Username,Password")]LogInViewModel viewModelLog)
-        // {
-        //     List<Domain.Model.Item> items = RepoItem.GetItemsByName();
-        //     List<ItemViewModel> realItems = new List<ItemViewModel>();
-        //     foreach (var val in items)
-        //     {
-        //         if (val.StoreId == (RepoPers.GetPeopleByName(viewModelLog.Username).First( p => p.Username.ToLower() == viewModelLog.Username.ToLower())).StoreId)
-        //         {
-        //             realItems.Add(new ItemViewModel
-        //             {
-        //                 ItemId = val.Id,
-        //                 ItemName = val.Name,
-        //                 ItemDescription = val.Description,
-        //                 ItemPrice = val.Price,
-        //                 StoreName = RepoStore.GetStoreById(val.StoreId).Name,
-        //                 OrderId = val.OrderId,
-        //                 SellerName = RepoSell.GetSellerById(val.SellerId).Name,
-        //                 TopicName = RepoTopi.GetTopicById(val.TopicId).Topic
-        //             });
-        //         }
-        //     }
-
-        //     var itemlogin = new ItemAnLogInViewModel
-        //     {
-        //         Items = realItems,
-        //         LogInViewModel = viewModelLog,
-        //         selectedItems = new List<ItemViewModel>()
-        //     };
-
-        //     return View(itemlogin);
-        // }
 
         public ActionResult Order([Bind("LogInViewModel,Items,selectedItems")]ItemAnLogInViewModel viewModelLog)
         {
@@ -172,5 +115,29 @@ namespace PaulsUsedGoods.WebApp.Controllers
                 return View(viewModel);
             }
         }
+
+        public ActionResult ViewCart()
+        {
+            double price = 0;
+            List<Domain.Model.Item> orderItemsList = new List<Domain.Model.Item>();
+            foreach (var val in MyOrder.itemsInOrder)
+            {
+                orderItemsList.Add(RepoItem.GetItemById(val));
+                price = price + RepoItem.GetItemById(val).Price;
+            }
+            var viewModel = new DetailedOrderViewModel
+            {
+                PersonName = MyOrder.Username,
+                StoreName = RepoStore.GetStoreById(RepoPers.GetPeopleByName(MyOrder.Username).First(p => p.Username.ToLower() == MyOrder.Username.ToLower()).StoreId).Name,
+                DateOfOrder = DateTime.Now,
+                Price = price,
+                ItemList = orderItemsList,
+                SuggestedItem = GetSuggestedItem.Suggest(RepoItem,RepoStore, RepoOrd, RepoTopi,RepoSell, RepoPers, RepoRev, MyOrder)
+            };
+
+            return View(viewModel);
+        }
+
+
     }
 }

@@ -16,8 +16,6 @@ namespace PaulsUsedGoods.WebApp.Controllers
 {
     public class ItemsController : Controller
     {
-        private readonly UsedGoodsDbContext _context;
-
         public IItemRepository Repo { get; }
         public IStoreRepository RepoStore { get; }
         public IOrderRepository RepoOrd { get; }

@@ -1,5 +1,13 @@
+4/6/20
+Added some tests
+can now create,edit,delete,index: all
+Fixed webapp and database communication
+Changed layout and navigation bar spacing
+fixed some bugs (undocumented null errors from data structure changes)
+
+
 4/5/20
-can now create,edit,delete: people, reviews, sellers, stores(half way done, untested)
+can now create,edit,delete,index: people, reviews, sellers, stores(half way done, untested)
 can now list items to buy based on user's store
 can now add items to a cart that persists (THIS TOOK MY FOREVER)
 numerous bugfixes (undocumented)
@@ -7,6 +15,7 @@ dirtied code while trying various fixes
 fixed publish pipeline
 added populateitemlist for buying logic
 added singleton dependency injection that tracks the order
+learned a lot about how razor, mvc, views, viewdata, html, and dependency injection works (the hard way)
 
 4/4/20
 Tweaked item view to now show all related info
@@ -18,7 +27,7 @@ Can now create or edit items, and delete
 
 4/3/20
 Changed startup.cs to look closer to Nick's.
-    will probably end up changing it late, because not entirely sure what some of it does atm.
+    will probably end up changing it later, because not entirely sure what some of it does atm.
 Added serilog
 Changed program.cs to look like Nick's.
     Most of what it did was add a logger.

@@ -5,148 +5,125 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PaulsUsedGoods.DataAccess.Context;
+using PaulsUsedGoods.Domain.Interfaces;
+using PaulsUsedGoods.WebApp.Controllers;
+using PaulsUsedGoods.WebApp.ViewModels;
 
 namespace PaulsUsedGoods.WebApp.Controllers
 {
     public class TopicOptionsController : Controller
     {
-        private readonly UsedGoodsDbContext _context;
 
-        public TopicOptionsController(UsedGoodsDbContext context)
+        public IItemRepository RepoItem { get; }
+        public IStoreRepository RepoStore { get; }
+        public IOrderRepository RepoOrd { get; }
+        public ITopicOptionRepository RepoTopi { get; }
+        public ISellerRepository RepoSell { get; }
+        public IPersonRepository RepoPers {get;}
+        public IReviewRepository RepoRev {get;}
+
+        public TopicOptionsController(IItemRepository repoItem,IStoreRepository repoStore, IOrderRepository repoOrd, ITopicOptionRepository repoTopi,ISellerRepository repoSell, IPersonRepository repoPers, IReviewRepository repoRev)
         {
-            _context = context;
+            RepoItem = repoItem ?? throw new ArgumentNullException(nameof(repoItem));
+            RepoStore = repoStore ?? throw new ArgumentNullException(nameof(repoStore));
+            RepoOrd = repoOrd ?? throw new ArgumentNullException(nameof(repoOrd));
+            RepoTopi = repoTopi ?? throw new ArgumentNullException(nameof(repoTopi));
+            RepoSell = repoSell ?? throw new ArgumentNullException(nameof(repoSell));
+            RepoPers = repoPers ?? throw new ArgumentNullException(nameof(repoPers));
+            RepoRev = repoRev ?? throw new ArgumentNullException(nameof(repoRev));
         }
 
-        // GET: TopicOptions
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.TopicOptions.ToListAsync());
-        }
 
-        // GET: TopicOptions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Items
+        public ActionResult Index([FromQuery] string search = "")
         {
-            if (id == null)
+            List<Domain.Model.TopicOption> topics = RepoTopi.GetTopicByName();
+            List<TopicOptionViewModel> realTopics = new List<TopicOptionViewModel>();
+            foreach (var val in topics)
             {
-                return NotFound();
+                realTopics.Add(new TopicOptionViewModel
+                {
+                    TopicOptionId = val.Id,
+                    TopicName = val.Topic
+                });
             }
-
-            var topicOption = await _context.TopicOptions
-                .FirstOrDefaultAsync(m => m.TopicOptionId == id);
-            if (topicOption == null)
+            if (search != null)
             {
-                return NotFound();
+                return View(realTopics.FindAll(p => p.TopicName.ToLower().Contains(search.ToLower())));
             }
-
-            return View(topicOption);
+            return View(realTopics);
         }
-
-        // GET: TopicOptions/Create
+        // GET: Items/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TopicOptions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Items/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TopicOptionId,TopicName")] TopicOption topicOption)
+        public IActionResult Create([Bind("TopicName")] TopicOptionViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(topicOption);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(topicOption);
-        }
-
-        // GET: TopicOptions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var topicOption = await _context.TopicOptions.FindAsync(id);
-            if (topicOption == null)
-            {
-                return NotFound();
-            }
-            return View(topicOption);
-        }
-
-        // POST: TopicOptions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TopicOptionId,TopicName")] TopicOption topicOption)
-        {
-            if (id != topicOption.TopicOptionId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(topicOption);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TopicOptionExists(topicOption.TopicOptionId))
+                    var topic = new Domain.Model.TopicOption
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                        Id = viewModel.TopicOptionId,
+                        Topic = viewModel.TopicName,
+                        Items = RepoItem.GetItemsByTopicName(viewModel.TopicName)
+                            // .FindAll(p => p.TopicId == (RepoTopi.GetTopicByName(viewModel.TopicName)
+                            // .First(p => p.Topic == viewModel.TopicName).Id)),
+                    };
+
+                    RepoTopi.AddTopic(topic);
+                    RepoTopi.Save();
+
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return View(viewModel);
             }
-            return View(topicOption);
+            catch
+            {
+                return View(viewModel);
+            }
         }
 
-        // GET: TopicOptions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Items/Delete/5
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+            Domain.Model.TopicOption topic = RepoTopi.GetTopicById(id);
+            var viewModel = new TopicOptionViewModel
             {
-                return NotFound();
-            }
-
-            var topicOption = await _context.TopicOptions
-                .FirstOrDefaultAsync(m => m.TopicOptionId == id);
-            if (topicOption == null)
-            {
-                return NotFound();
-            }
-
-            return View(topicOption);
+                TopicOptionId = topic.Id,
+                TopicName = topic.Topic
+            };
+            return View(viewModel);
         }
 
-        // POST: TopicOptions/Delete/5
+        // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult Delete(int id, [BindNever]IFormCollection collection)
         {
-            var topicOption = await _context.TopicOptions.FindAsync(id);
-            _context.TopicOptions.Remove(topicOption);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            try
+            {
+                RepoItem.DeleteItemByTopicId(id);
+                RepoTopi.DeleteTopicById(id);
+                RepoTopi.Save();
 
-        private bool TopicOptionExists(int id)
-        {
-            return _context.TopicOptions.Any(e => e.TopicOptionId == id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

@@ -92,6 +92,9 @@ namespace PaulsUsedGoods.DataAccess
                     Id = 0,
                     Date = DateTime.Now,
                     Price = 0,
+                    Username = "",
+                    UserId = 0,
+                    Items = new List<Domain.Model.Item>()
                 };
             }
             else
@@ -100,7 +103,10 @@ namespace PaulsUsedGoods.DataAccess
                 {
                     Id = order.OrderId,
                     Date = order.OrderDate,
-                    Price = order.TotalOrderPrice
+                    Price = order.TotalOrderPrice,
+                    Username = order.Person.Username,
+                    UserId = order.PersonId,
+                    Items = order.Item.Select(MapItem).ToList()
                 };
             }
         }
@@ -112,6 +118,7 @@ namespace PaulsUsedGoods.DataAccess
                 OrderId = order.Id,
                 OrderDate = order.Date,
                 TotalOrderPrice = order.Price,
+                PersonId = order.UserId
             };
         }
 

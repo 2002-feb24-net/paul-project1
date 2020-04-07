@@ -11,9 +11,6 @@ namespace PaulsUsedGoods.Domain.Interfaces
         Order GetOrderById(int orderId);
         void AddOrder(Order inputOrder);
         void DeleteOrderById(int orderId);
-// // ! ITEMS WITHIN THE INDIVIDUAL ORDER ONLY
-//         List<Item> GetItemsByName(string personName = null);
-//         List<Item> GetItemsById(int orderId);
 // ! GENERAL COMMANDS
         void Save();
     }

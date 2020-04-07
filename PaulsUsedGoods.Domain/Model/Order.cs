@@ -7,8 +7,21 @@ namespace PaulsUsedGoods.Domain.Model
 {
     public class Order : IOrder
     {
+        private int _userId;
         public List<int> itemsInOrder {get; set;}
         public string Username {get; set;}
+        public int UserId
+        {
+            get => _userId;
+            set
+            {
+                if(value == 0)
+                {
+                    throw new ArgumentException("User ID is 0! Cant be assigned to order.", nameof(value));
+                }
+                _userId = value;
+            }
+        }
         private DateTime _date;
         private double _price;
         private List<Item> _items;
@@ -38,10 +51,6 @@ namespace PaulsUsedGoods.Domain.Model
             get => _items;
             set
             {
-                if(value.Count == 0)
-                {
-                    throw new ArgumentException("There is no input items!", nameof(value));
-                }
                 _items = value;
             }
         }
@@ -51,10 +60,6 @@ namespace PaulsUsedGoods.Domain.Model
             get => _price;
             set
             {
-                if(value == 0)
-                {
-                    throw new ArgumentException("There is no input price!", nameof(value));
-                }
                 _price = value;
             }
         }

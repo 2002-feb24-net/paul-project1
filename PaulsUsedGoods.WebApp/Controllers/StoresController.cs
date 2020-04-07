@@ -117,7 +117,7 @@ namespace PaulsUsedGoods.WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id, [Bind("SellerName,Items,AverageReview")] StoreViewModel viewModel)
+        public IActionResult Edit([FromRoute]int id, [Bind("LocationName")] StoreViewModel viewModel)
         {
             try
             {
@@ -163,8 +163,8 @@ namespace PaulsUsedGoods.WebApp.Controllers
             {
                 RepoPers.DeletePeopleByStoreId(id);
                 RepoItem.DeleteItemByStoreId(id);
-                RepoSell.DeleteSellerById(id);
-                RepoSell.Save();
+                RepoStore.DeleteStoreById(id);
+                RepoStore.Save();
 
                 return RedirectToAction(nameof(Index));
             }

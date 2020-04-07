@@ -67,6 +67,22 @@ namespace PaulsUsedGoods.DataAccess.Repositories
             }
             return itemList.Select(Mapper.MapItem).ToList();
         }
+
+        public List<Domain.Model.Item> GetItemsByTopicName(string topicName = null)
+        {
+            _logger.LogInformation($"Retrieving items with the toic name: {topicName}");
+            List<Context.Item> itemList = _dbContext.Items
+                .Include(p => p.Order)
+                .Include(p => p.Store)
+                .Include(p => p.Seller)
+                .Include(p => p.TopicOption)
+                .ToList();
+            if (topicName != null)
+            {
+                itemList = itemList.FindAll(p => p.TopicOption.TopicName.ToLower() == topicName.ToLower());
+            }
+            return itemList.Select(Mapper.MapItem).ToList();
+        }
         public Domain.Model.Item GetItemById(int itemId)
         {
             _logger.LogInformation($"Retrieving item id: {itemId}");
@@ -77,6 +93,7 @@ namespace PaulsUsedGoods.DataAccess.Repositories
                 .First(p => p.ItemId == itemId);
             return Mapper.MapItem(returnItem);
         }
+
         public void AddItem(Domain.Model.Item inputItem)
         {
             if (inputItem.Id != 0)
@@ -109,6 +126,26 @@ namespace PaulsUsedGoods.DataAccess.Repositories
         {
             _logger.LogInformation($"Deleting item with store ID {storeId}");
             List<Context.Item> entity = _dbContext.Items.ToList().FindAll(p => p.StoreId == storeId);
+            foreach (var val in entity)
+            {
+                _dbContext.Remove(val);
+            }
+        }
+
+        public void DeleteItemByOrderId(int orderId)
+        {
+            _logger.LogInformation($"Deleting item with order ID {orderId}");
+            List<Context.Item> entity = _dbContext.Items.ToList().FindAll(p => p.OrderId == orderId);
+            foreach (var val in entity)
+            {
+                _dbContext.Remove(val);
+            }
+        }
+
+        public void DeleteItemByTopicId(int topicId)
+        {
+            _logger.LogInformation($"Deleting item with topic ID {topicId}");
+            List<Context.Item> entity = _dbContext.Items.ToList().FindAll(p => p.TopicId == topicId);
             foreach (var val in entity)
             {
                 _dbContext.Remove(val);

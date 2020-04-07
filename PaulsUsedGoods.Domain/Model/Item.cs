@@ -7,6 +7,7 @@ namespace PaulsUsedGoods.Domain.Model
 {
     public class Item
     {
+        private int _id;
         private string _name;
         private string _description;
         private double _price;

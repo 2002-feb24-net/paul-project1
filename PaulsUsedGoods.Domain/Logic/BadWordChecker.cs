@@ -10,6 +10,7 @@ namespace PaulsUsedGoods.Domain.Logic
         {
             foreach (var val in BadNameList)
             {
+
                 if(inputWord.ToLower().Contains(val))
                 {
                     return false;

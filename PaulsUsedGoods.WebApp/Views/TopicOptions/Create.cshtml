@@ -1,4 +1,4 @@
-﻿@model PaulsUsedGoods.DataAccess.Context.TopicOption
+﻿@model PaulsUsedGoods.WebApp.ViewModels.TopicOptionViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -17,6 +17,7 @@
                 <input asp-for="TopicName" class="form-control" />
                 <span asp-validation-for="TopicName" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="TopicOptionId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

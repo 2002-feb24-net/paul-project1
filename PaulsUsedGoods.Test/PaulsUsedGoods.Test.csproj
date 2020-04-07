@@ -23,4 +23,10 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaulsUsedGoods.DataAccess\PaulsUsedGoods.DataAccess.csproj" />
+    <ProjectReference Include="..\PaulsUsedGoods.Domain\PaulsUsedGoods.Domain.csproj" />
+    <ProjectReference Include="..\PaulsUsedGoods.WebApp\PaulsUsedGoods.WebApp.csproj" />
+  </ItemGroup>
+
 </Project>
