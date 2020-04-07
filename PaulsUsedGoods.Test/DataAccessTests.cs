@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using PaulsUsedGoods.DataAccess;
+using System.Collections.Generic;
 
 namespace PaulsUsedGoods.Test
 {
@@ -103,12 +104,13 @@ namespace PaulsUsedGoods.Test
 
 // ! MAPPER STORE
 //! ***********************
-                [Fact]
+        [Fact]
         public void MapStore_Test()
         {
             PaulsUsedGoods.DataAccess.Context.Store contextInst = new PaulsUsedGoods.DataAccess.Context.Store();
             contextInst.StoreId = 1;
             contextInst.LocationName = "TestName";
+            contextInst.Item = new List<PaulsUsedGoods.DataAccess.Context.Item>();
 
             PaulsUsedGoods.Domain.Model.Store result = Mapper.MapStore(contextInst);
 

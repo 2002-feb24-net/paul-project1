@@ -17,6 +17,8 @@ can now see orders
 can now look closer at an order
 added sort inside of order view (unimplemented)
 reworked order view with minor internal css
+my changelog has devolved faster than my coding has. Never lucky.
+fixed the failed test (null error)
 
 4/5/20
 can now create,edit,delete,index: people, reviews, sellers, stores(half way done, untested)
