@@ -1,3 +1,7 @@
+4/7/20
+Fixed bug with items being written to the wrong order.
+v1.4
+
 4/6/20
 Added some tests
 can now create,edit,delete,index: all
