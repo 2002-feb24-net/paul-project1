@@ -55,7 +55,7 @@ stages:
     displayName: test
 
     pool:
-      vmImage: ubuntu-latest
+      vmImage: ubuntu-18.04
 
     steps:
 
